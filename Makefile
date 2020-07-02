@@ -14,15 +14,18 @@ export CFLAGS=\
 	-Os                                                                   \
 	-ffunction-sections                                                   \
 	-DF_CPU=8000000L                                                      \
+	-fno-threadsafe-statics                                               \
 	-I $(INSTALL_DIR)/include
 
 LIBS=\
+		 app-card-reader \
+		 support-scheduler support-persistence support-scheduler \
+		 modules-sim900 modules-sd modules-sd-utility modules-rs485 modules-mifare modules-hid \
 		 drivers-gpio drivers-hardware-serial drivers-software-serial drivers-timers drivers-spi \
-		 modules-sim900 modules-sd modules-sd-utility modules-rs485 modules-mifare \
 		 dread-utilities
 
 LDFLAGS=-L /usr/lib/avr/ -Wl,--gc-sections -lm -L $(INSTALL_DIR)/lib $(LIBS:%=-l%)
-SUBDIRS=Drivers Modules Utilities
+SUBDIRS=Application Drivers Modules Support Utilities 
 
 SRC=$(wildcard *.cpp)
 

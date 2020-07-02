@@ -7,6 +7,10 @@
 //***************************LIBRARIES**********************************//
 //////////////////////////////////////////////////////////////////////////
 #include "Dread.h"
+#include "Application/CardReader/CardReader.h"
+#include "Modules/HID/HID.h"
+#include "Support/Persistence/Persistence.h"
+#include "Support/Scheduler/Scheduler.h"
 //************************FLASH CONSTANTS*******************************//
 //////////////////////////////////////////////////////////////////////////
 /*
@@ -47,6 +51,7 @@ const uint8_t FTP_PUT_Close[] PROGMEM=         "FTPPUT=2,0\r";
 //RS485
 //~~~~
 //HID
+static uint8_t hid_led = LO_ALL;
 //~~~~
 //************************GLOBAL VARIABLES******************************//
 ////////////////////////////////////////////////////////////////////////////
@@ -54,24 +59,21 @@ static uint8_t buffer[16];
 //Interrupts
 static uint8_t date[23];         /*Stores CCLK: "14/02/14,13:45:08-28"*/
 /*0123456789012345678901*/
-uint16_t tick=0;
 
 //FAT  
-File file;
-char file_download[]="I1Z.txt";
-char file_name[13];               /*Stores FTPPUTNAME: "P1I006TC.txt"*/
+static File file;
+static char file_download[]="I1Z.txt";
+static char file_name[13];               /*Stores FTPPUTNAME: "P1I006TC.txt"*/
 /*012345678901*/
 static uint8_t file_line[53];
-uint16_t  file_ptr;
-char CONFIG_file[]="config.txt";   /*config.txt*/
+static uint16_t  file_ptr;
+static char CONFIG_file[]="config.txt";   /*config.txt*/
 //GSM
-uint8_t gsm_task;
-uint8_t gsm_pointer;
-uint32_t gsm_timer;
+static uint8_t gsm_task;
+static uint8_t gsm_pointer;
+static uint32_t gsm_timer;
 
 //RFID
-static uint8_t mfr_serial[5];
-static uint8_t mfr_lastSer[5];
 static uint8_t Mfr_Key[]={0x00,0x00,0x0B,0xAC,0xAF,0xEA};  //Nedera Key
 
 //RS485
@@ -79,14 +81,7 @@ static uint8_t Mfr_Key[]={0x00,0x00,0x0B,0xAC,0xAF,0xEA};  //Nedera Key
 uint8_t add_book[NET_MAX][3];
 uint8_t add_ptr;
 uint8_t reg_try;*/
-
 //HID
-boolean   red;
-boolean   green;
-boolean blink_red;
-boolean blink_grn;
-boolean SET_LED=true;
-uint8_t hid_led;
 //************************CLASSES******************************//
 //////////////////////////////////////////////////////////////////////////
 //Interrupts
@@ -94,28 +89,24 @@ uint8_t hid_led;
 //FAT
 //~~~~
 //Debug
-SoftwareSerial SoftSerial(DBG_RX,DBG_TX);
+static SoftwareSerial SoftSerial(DBG_RX,DBG_TX);
 //GSM
-Sim900 gprs(Serial,SoftSerial);
+static Sim900 gprs(Serial,SoftSerial);
 //RFID
-MifareLite rfid(MFR_SS,MFR_NRST);
+static MifareLite rfid(MFR_SS,MFR_NRST);
 //RS485
 //~~~~
 //HID
 //~~~~
+static uint8_t upload_prefix[4] = "I1Z";
+static Persistence persistence(file, upload_prefix, SoftSerial);
+static CardReader card_reader(rfid, persistence, SoftSerial);
+
+Scheduler::Subscription hid_subscription(HID::CheckTime, INT_SEC);
+
 //////////////////////////////////////////////////////////////////////////
 ////**********************MainFUNCTIONS**********************/////////////
-////INSIDE Functions
-void inline beep(){
-   digitalWrite(HID_BUZZ,HIGH);
-   delay(10);
-   digitalWrite(HID_BUZZ,LOW);
-   delay(10);
-   digitalWrite(HID_BUZZ,HIGH);
-   delay(10);
-   digitalWrite(HID_BUZZ,LOW);
 
-}
 //** Function: setLed(char led_setup)
 /* Description:
    This function makes HID code "easy" to read or debug. Handles 16 led behaviors, all of them are 4 bit chars. The behaviors are defined
@@ -133,25 +124,7 @@ void inline beep(){
    - A buzzer pin behavior may be implemented as well.
 
 */
-inline void setLed(uint8_t led_setup)
-{
-   SET_LED=false;
-
-   blink_grn=blink_red=red=green=false; /*Set the outputs to low*/
-
-   red=led_setup&0x01;
-   led_setup=led_setup>>1;
-
-   green=led_setup&0x01;
-   led_setup=led_setup>>1;
-
-   blink_red=led_setup&0x01;
-   led_setup=led_setup>>1;
-
-   blink_grn=led_setup&0x01;
-
-   SET_LED=true;
-}
+static void setLed(uint8_t led_setup) {}
 
 static boolean nextLine(const char*filename)
 {
@@ -188,44 +161,6 @@ static boolean nextLine(const char*filename)
 
    return file_end;
 }
-//** Function: PrintLong(unsigned char *str,char ptr)
-/* Description:
-   The function takes char array and concatenate 5 consecutive chars into a unsigned long. The print function can handle unsigned long prints.
-   Variables required:
-   - str      the array where the 5 chars are going to be taken.
-   - id         the unsigned long generated. the function return id.
-   - ptr      for array shifting functions.
-   * Notes:
-   - Nedera saves long values in S150 Mifare Cards. Longs datatypes can have only 4 bytes. 
-   - 5 bytes are necessary because the serial Num of each S150 Mifare Card is written in the text file as well.
-
-*/
-uint32_t PrintLong(const uint8_t *str,uint8_t ptr){
-  uint32_t id=0;
-    id|=(uint8_t)str[ptr++];
-    id=id<<8;
-   id|=(uint8_t)str[ptr++];
-    id=id<<8;
-    id|=(uint8_t)str[ptr++];
-    id=id<<8;
-    id|=(uint8_t)str[ptr++];
-    id=id<<8;
-    id|=(uint8_t)str[ptr++];
-   return id;
-}
-boolean equalStr(const uint8_t*str1,const uint8_t*str2)
-{
-   uint8_t ptr;
-   boolean result=false;
-      ptr=0;
-      do
-      {
-         result=str1[ptr]==str2[ptr];
-         ++ptr;
-      } while (ptr<5&&result);
-
-   return result;
-}
 //** Function: DumpFile()
 /* Description:
    The method removes the File from the SD card. After that, generates a new file_name in order to
@@ -247,37 +182,8 @@ boolean equalStr(const uint8_t*str1,const uint8_t*str2)
    - the SD.exist is just for error issues, the confirmation may not be necessary because DumpFile is a function inside FTPUploadGPRS()
 */
 boolean inline DumpFile(){
-   SoftSerial.write('R');               /*Write on debug "R*\r"*/
-   SoftSerial.write('*');
-   SoftSerial.println();
-
-   SD.remove(file_name);
-
-   if (!SD.exists(file_name))            /*Removes the file with file_name. Check if exist to validate
-                                 removal. Non existent = removed, existent =not removed */
-   {
-      //SoftSerial.println("genF*");
-      generateFileNameIUD();
-
-      SoftSerial.write('D');
-      SoftSerial.println();
-      hid_led=LO_ALL;
-      setLed(hid_led);
-      return true;
-   }
-   else
-   {
-      SoftSerial.write('U');
-      SoftSerial.write('*');
-      SoftSerial.println();
-      hid_led=BLK_RED;
-      setLed(hid_led);
-      return false;
-   }
-
-   SPI.end();
-   SPI.begin();
    rfid.Init();                     /*Reboot RFID*/
+   return true;
 }
 //** Function: generateFileNameIUD()
 /* Description:
@@ -296,29 +202,8 @@ boolean inline DumpFile(){
 
 */
 inline void generateFileNameIUD()
-{
-   uint8_t counter=7U;                     /*Pointer will go backwards.File_name only changes first 8 characters [0-7]*/
-   do
-   {
-      switch (file_name[counter])
-      {
-         case 'Z':                     /*'Z' to '0'. Change previous character."AZ" to "B0"*/
-         file_name[counter]='0';
-         --counter;
-         break;
-         case '9':                     /*'9' to 'A'."A9" to "AA". Finish*/
-         file_name[counter]='A';
-         counter=2U;
-         break;
-         default:
-         ++file_name[counter];            /*Adds 1 to char, ASCII have alphanumeric order. Finish*/
-         counter=2U;
-         break;
-      }
+{}
 
-   } while (file_name[counter+1]=='0'
-   && counter>2U);               /*Checks char overflow to continue with file generation, up to 10*/
-}
 inline boolean uploadPacket()
 {
    uint32_t file_length=0;               /*Variable that stores the backup file size. Up to 2^31*/
@@ -428,54 +313,6 @@ inline boolean uploadPacket()
      friendly (transmitting blinks and standby blinks).
    -
 */
-void CheckTime()
-{
-   //Blinking Led method
-   //if blink methods are HIGH, led s toggles, else the led s don't change.
-   if(SET_LED)
-   {
-      red=red^blink_red;
-      green=green^blink_grn;
-      digitalWrite(HID_RLD,red);
-      digitalWrite(HID_GLD,green);
-   }
-
-   //adds one second to the counter.
-   ++tick;
-
-   if((tick%INT_SEC==0))
-   {
-      //SoftSerial.println(tick,DEC);
-       if (SEC_UNI>='9')
-       {
-          SEC_UNI='0'; //Seq X9" -> X0"
-
-          if (SEC_DEC>='5')
-          {
-             SEC_DEC='0'; //59" -> 00"
-          }
-          else
-          {
-             SEC_DEC++;  //09"->10"
-          }
-       }
-       else
-       {
-          SEC_UNI++;//00"->01"
-       }
-   }
-   //Change hour:minutes if the seconds overflows 60 counts.
-   if(tick>=INT_MINUTES)///////////////////CHANGE to 60 further. 20 is for debugging purposes!!!
-   {
-      //Use if methods, may use less memory than math.
-      //Every 60 seconds, add a minute and seconds resets.
-      //minutes++;
-      tick=0;
-      file_ptr=0;
-      ////Every minute the UPLOAD method is available.
-      gsm_task=0;
-   }
-}
 ////SETUP
 //** Function: ConfigSD()
 /* Description:
@@ -515,18 +352,10 @@ inline void ConfigSD()
 */
 inline void ConfigHID()
 {
-   pinMode(HID_RLD,OUTPUT);
-   pinMode(HID_GLD,OUTPUT);
-   pinMode(HID_BUZZ,OUTPUT);
-   digitalWrite(HID_RLD,LOW);
-   digitalWrite(HID_GLD,LOW);
-   digitalWrite(HID_BUZZ,LOW);
-   //Interrupts
-   MsTimer2::set(INT_PERIOD,CheckTime);
-   MsTimer2::start();
    hid_led=RED_GRN;
    setLed(hid_led);
 }
+
 inline void ConfigGPRS()
 {
    boolean result=false;                        /*Variable to store return value of gprs methods.*/
@@ -764,155 +593,13 @@ inline void UploadGPRS()
    }
 }
 inline void SaveRFID2SD()
-{
-   boolean result;
-   //Check the presence of a S150 Mifare Card
-   if (rfid.Request(PICC_REQIDL,buffer)!=MI_ERR)
-   {
-      //if a card was present, continues the S150 protocol.
-      //Reads one (of all the) card(s) that are near the antenna.
-      //The S150 read returns block 0, Serial IUD number.
-      //In order to avoid saving the same card again, check if last serial number is different from the new serial num.
-      //Last serial number is the last card routine that was successfully saved on SD.
-      //SoftSerial.println("Req");
-      result=rfid.Anticoll(mfr_serial)!=MI_ERR;
-      //PrintLong(mfr_serial,0);
-      //PrintLong(mfr_lastSer,0);
-      //#warning equalStr() was commented
-      if (result && !equalStr(mfr_serial,mfr_lastSer))
-      {
-         //SoftSerial.println("Anti");
-         //Uses the serial number to select the S150 to communicate with.
-         result=rfid.SelectTag(buffer,mfr_serial)!=MI_ERR;
-         if (result)
-         {
-            //SoftSerial.println("Tag");
-            beep();
-            //Proceeds with authentication, Nedera uses KeyB, so the method is PICC_AUTHENT1B.}
-            result=rfid.Auth(PICC_AUTHENT1B,0x04,Mfr_Key,buffer,mfr_serial)!=MI_ERR;
-            if (result)
-            {
-               //SoftSerial.println("Auth");
-               //If success, reads block 0 sector 1. Mifare S150 memory is a vector (not a matrix as how the doc talk about)
-               //So each sector has 4 blocks, so each 4 blocks the sector changes. the first 3 block of each sector can be
-               //used as memory, the 4th one has the Authentication configuration (keys and modes each block may implement) of
-               //the whole sector. Avoid to read or write (EVEN WORSE!!) the 4th block of each sector.
-               result=rfid.Read(0x04,buffer)!=MI_ERR;
-               if (result)
-               {
-                  //SoftSerial.println("Read");
-                  //After successfully reads the block, the S150 Card is sent back to sleep.
-                  rfid.Halt();
+{}
 
-                  //Writing File Method
-                  //Start SD communication
-                  SD.begin(SD_SS);
-                  //Check if the file exist by using a string with the name. The method is no case sensitive.
-                  //Opens/Creates file by means string with the name. If the file exist the function opens it, else creates it.
-                  file = SD.open(file_name, FILE_WRITE);
-                  //Check if the file could be opened/created correctly. if Not cancels the saving. HID will ask the user
-                  //for a retry.
-                  result=file;
-                  if (result)
-                  {
-                     //Prints in file the following format: ID \t RFIDContent(as a decimal number) \t date (dd/mm/yyyy) \t hour (hh:mm) \t Serialnum
-
-                     file.write((uint8_t*)file_download,3);
-                     file.write('\t');
-
-                     file.printNumber(PrintLong(buffer,11),DEC);
-                     file.write('\t');
-                     //Writes date to file.
-                     for (uint8_t counter=1;counter<(uint8_t)(sizeof(date)-5);++counter) //date format: "yy/mm/dd \t hh:mm:ss"
-                     {
-                        file.write(date[counter]);
-                        //SoftSerial.write(date[counter]);
-                        //SoftSerial.write(',');
-                     }
-                     //Print function way be able to print date correctly.
-                     //file.print(date);
-                     file.write('\t');
-
-                     for(uint8_t aux_byte, i=0; i<5;++i)
-                     {
-
-                        aux_byte=(mfr_serial[i]>>4)&0x0F;
-                        //debug.println(aux_byte,HEX);
-                        file.write(aux_byte>9?aux_byte+'A'-10:aux_byte+'0');
-                        aux_byte=(mfr_serial[i]&0x0F);
-                        file.write(aux_byte>9?aux_byte+'A'-10:aux_byte+'0');
-                     }
-
-                     file.println();
-                     file.close();
-                     //date[9]=',';//change SIM900 CLK format = "date   hour" to "date,hour". Necessary for CCLK matching.
-                     //Checks if file was correctly created. Is for debugging purposes only.
-                     result=SD.exists(file_name);
-                     SoftSerial.write('S');
-                     SoftSerial.write('v');
-                     SoftSerial.println();
-                  }
-
-               }
-            }
-         }
-
-      }
-
-      setLed(LO_ALL);
-      SET_LED=false;
-      if (result) {
-         //*Commentary function: add /* above this line to comment a full paragraph ****/
-         //If the code reaches here, the RFID and SD routines were successful. The HID tells the user he succeed.
-         //Correct routine= a long green light with a long beep from buzzer.
-
-         digitalWrite(HID_GLD,HIGH);
-         //#warning digitalWrite(HID_BUZZ,HIGH) was commented, it-s annoying!!
-         digitalWrite(HID_BUZZ,HIGH); //BEEEEEP, if commented is for debugging purposes, it's annoying!!!
-         //Reboots SPI communication, switches to RFID again.
-         memcpy(mfr_lastSer,mfr_serial,5);
-         delay(800);
-         digitalWrite(HID_BUZZ,LOW);
-         digitalWrite(HID_GLD,LOW);
-         result=false;
-         }else {
-         //This cases is where the Authentication method failed. HID asks the user for a retry.
-         //BEEP BEEP BEEP
-         digitalWrite(HID_RLD,HIGH);
-         digitalWrite(HID_BUZZ,HIGH);
-         delay(200);
-         digitalWrite(HID_RLD,LOW);
-         digitalWrite(HID_BUZZ,LOW);
-         delay(200);
-         digitalWrite(HID_RLD,HIGH);
-         digitalWrite(HID_BUZZ,HIGH);
-         delay(200);
-         digitalWrite(HID_RLD,LOW);
-         digitalWrite(HID_BUZZ,LOW);
-         delay(200);
-         digitalWrite(HID_RLD,HIGH);
-         digitalWrite(HID_BUZZ,HIGH);
-         delay(200);
-         digitalWrite(HID_RLD,LOW);
-         digitalWrite(HID_BUZZ,LOW);
-
-         SoftSerial.write('U');               /*Print "Un"*/
-         SoftSerial.write('n');
-         SoftSerial.println();
-      }
-      setLed(hid_led);//This method set true SET_LED
-      delay(500);
-      SPI.begin();
-      rfid.Init();
-   }
-   //result chooses HID led result: 500ms large beep/green led pulse for success or 3 short beep/red led pulses if fails.
-   //result determine success when all of the methods returned true. If one of those turns false, immediately breaks code
-   // and call fail HID routine.
-
-
-}
 void setup()
 {
+
+  Scheduler::get().subscribe(&hid_subscription);
+
    //Init Serials GPRS and debug
    gprs.begin(GSM_BAUD,GSM_RST,GSM_NPWD);
    //ConfigHID
@@ -927,7 +614,6 @@ void setup()
    SPI.begin();
    rfid.Init();
    //Set last serial to 0's
-   memset(mfr_lastSer,0,5);
 
    SoftSerial.write('R');            /*Print "RFID"*/
    SoftSerial.write('F');

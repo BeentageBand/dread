@@ -1,5 +1,5 @@
-export PKG=modules
-SUBDIRS=GPRS RFID RS485 SD HID
+export PKG=app
+SUBDIRS=CardReader 
 
 .PHONY: all clean $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all)
 

@@ -17,39 +17,32 @@ export CFLAGS=\
 	-fno-threadsafe-statics                                               \
 	-I $(INSTALL_DIR)/include
 
-LIBS=\
-		 app-card-reader \
-		 support-scheduler support-persistence support-scheduler \
-		 modules-sim900 modules-sd modules-sd-utility modules-rs485 modules-mifare modules-hid \
-		 drivers-gpio drivers-hardware-serial drivers-software-serial drivers-timers drivers-spi \
-		 dread-utilities
+export CXXFLAGS=$(CFLAGS)
 
-LDFLAGS=-L /usr/lib/avr/ -Wl,--gc-sections -lm -L $(INSTALL_DIR)/lib $(LIBS:%=-l%)
 SUBDIRS=Application Drivers Modules Support Utilities 
+
+BIN=std-dread-launcher
 
 SRC=$(wildcard *.cpp)
 
-.PHONY: all $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all)
+.PHONY: all $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all)  Launcher-all Launcher-clean
 
-all: $(SUBDIRS:%=%-all) $(INSTALL_DIR)/bin/dread-launcher
+all: $(SUBDIRS:%=%-all) $(BIN:%=$(INSTALL_DIR)/bin/%) 
 
-clean: $(SUBDIRS:%=%-clean) $(wildcard *.[oa])
+clean: $(SUBDIRS:%=%-clean) Launcher-clean
 	rm -f *.[oa];
 	
-$(INSTALL_DIR)/bin/dread-launcher : $(SRC:.cpp=.o) $(INSTALL_DIR)/bin 
-	$(CXX) $(CFLAGS) -o $@ $< $(LDFLAGS);
+$(BIN:%=$(INSTALL_DIR)/bin/%) : $(INSTALL_DIR)/bin Launcher-all 
 
 clobber : clean
 	-rm -rf $(INSTALL_DIR);
 
-$(SUBDIRS:%=%-all) : $(INSTALL_DIR)/lib $(INSTALL_DIR)/include
+$(SUBDIRS:%=%-all) Launcher-all : $(INSTALL_DIR)/lib $(INSTALL_DIR)/include
 	make all -C $(@:%-all=%);
 
-$(SUBDIRS:%=%-clean) :
+$(SUBDIRS:%=%-clean) Launcher-clean:
 	make clean -C $(@:%-clean=%);
 
 $(INSTALL_DIR) $(INSTALL_DIR)/lib $(INSTALL_DIR)/bin $(INSTALL_DIR)/include : 
 	-mkdir -p $@;
 
-%.o : %.cpp
-	$(CXX) $(CFLAGS) -o $@ -c $^;

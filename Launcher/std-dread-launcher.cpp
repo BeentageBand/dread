@@ -7,10 +7,10 @@
 //***************************LIBRARIES**********************************//
 //////////////////////////////////////////////////////////////////////////
 #include "Dread.h"
-#include "Application/CardReader/CardReader.h"
-#include "Modules/HID/HID.h"
-#include "Support/Persistence/Persistence.h"
-#include "Support/Scheduler/Scheduler.h"
+#include "../Application/CardReader/CardReader.h"
+#include "../Modules/HID/HID.h"
+#include "../Support/Persistence/Persistence.h"
+#include "../Support/Scheduler/Scheduler.h"
 //************************FLASH CONSTANTS*******************************//
 //////////////////////////////////////////////////////////////////////////
 /*

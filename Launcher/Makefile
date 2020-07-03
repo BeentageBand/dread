@@ -2,7 +2,7 @@ SRCS=$(filter-out , $(wildcard *.cpp))
 BIN=std-dread-launcher
 LIBS=\
 		 app-card-reader \
-		 support-scheduler support-persistence support-scheduler \
+		 support-scheduler support-persistence support-scheduler support-locale \
 		 modules-sim900 modules-sd modules-sd-utility modules-rs485 modules-mifare modules-hid \
 		 drivers-gpio drivers-hardware-serial drivers-software-serial drivers-timers drivers-spi \
 		 dread-utilities

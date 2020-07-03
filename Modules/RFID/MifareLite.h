@@ -9,9 +9,7 @@
 #ifndef MIFARELITE_H_
 #define MIFARELITE_H_
 
-
-//#define uchar unsigned char
-#define uint unsigned int
+#include "Utilities/DreadSystem.h"
 
 //MF522 command bits
 #define PCD_IDLE              0x00               //NO action; cancel current commands
@@ -43,7 +41,6 @@
 #define MI_ERR                2
 
 
-#include "../../Utilities/DreadSystem.h"
 
 class MifareLite {
 	public:
@@ -65,7 +62,7 @@ class MifareLite {
 	private:
 	void Write_MFRC522(uint8_t addr, uint8_t val);
 	uint8_t Read_MFRC522(uint8_t addr);
-	uint8_t ToCard(uint8_t command, uint8_t *sendData, uint8_t sendLen,uint8_t *backData, uint *backLen);
+	uint8_t ToCard(uint8_t command, uint8_t *sendData, uint8_t sendLen,uint8_t *backData, uint8_t *backLen);
 	void CalulateCRC(uint8_t *pIndata, uint8_t len, uint8_t *pOutData);
 	void SetBitMask(uint8_t reg, uint8_t mask);
 	void ClearBitMask(uint8_t reg, uint8_t mask);

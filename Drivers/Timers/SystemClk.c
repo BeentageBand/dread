@@ -4,7 +4,7 @@
  * Created: 27/10/2014 01:19:49 p.m.
  *  Author: nedera03
  */ 
-#include "../../Utilities/DreadSystem.h"
+#include "Utilities/DreadSystem.h"
 // the prescaler is set so that timer0 ticks every 64 clock cycles, and the
 // the overflow handler is called every 256 ticks.
 #define MICROSECONDS_PER_TIMER0_OVERFLOW (clockCyclesToMicroseconds(64 * 256))

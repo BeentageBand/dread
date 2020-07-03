@@ -7,10 +7,10 @@
 //***************************LIBRARIES**********************************//
 //////////////////////////////////////////////////////////////////////////
 #include "Dread.h"
-#include "../Application/CardReader/CardReader.h"
-#include "../Modules/HID/HID.h"
-#include "../Support/Persistence/Persistence.h"
-#include "../Support/Scheduler/Scheduler.h"
+#include "Application/CardReader/CardReader.h"
+#include "Modules/HID/HID.h"
+#include "Support/Persistence/Persistence.h"
+#include "Support/Scheduler/Scheduler.h"
 //************************FLASH CONSTANTS*******************************//
 //////////////////////////////////////////////////////////////////////////
 /*
@@ -592,8 +592,6 @@ inline void UploadGPRS()
       break;
    }
 }
-inline void SaveRFID2SD()
-{}
 
 void setup()
 {
@@ -623,6 +621,6 @@ void setup()
 }
 void loop()
 {
-   UploadGPRS();
-   SaveRFID2SD();
+  card_reader.ReadAndStore(Mfr_Key, sizeof(Mfr_Key));
+  UploadGPRS();
 }

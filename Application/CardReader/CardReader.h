@@ -1,10 +1,10 @@
 #ifndef CARD_READER_H
 #define CARD_READER_H
 
-#include "../../Modules/RFID/MifareLite.h"
-#include "../../Modules/SD/SD.h"
-#include "../../Support/Persistence/Persistence.h"
-#include "../../Utilities/Print.h"
+#include "Modules/RFID/MifareLite.h"
+#include "Modules/SD/SD.h"
+#include "Support/Persistence/Persistence.h"
+#include "Utilities/Print.h"
 
 #define SERIAL_SIZE (5U)
 

@@ -32,7 +32,7 @@
 */
 
 #include "MsTimer2.h"
-#include "../../Utilities/DreadSystem.h"
+#include "Utilities/DreadSystem.h"
 
 unsigned long MsTimer2::msecs;
 void (*MsTimer2::func)();

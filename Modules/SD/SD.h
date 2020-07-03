@@ -15,8 +15,7 @@
 #ifndef __SD_H__
 #define __SD_H__
 
-//#warning #include "../../Utilities/DreadSystem.h" instead of #include <Arduino.h>
-#include "../../Utilities/DreadSystem.h"
+#include "Utilities/DreadSystem.h"
 
 #include "utility/SdFat.h"
 #include "utility/SdFatUtil.h"

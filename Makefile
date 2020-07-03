@@ -15,7 +15,8 @@ export CFLAGS=\
 	-ffunction-sections                                                   \
 	-DF_CPU=8000000L                                                      \
 	-fno-threadsafe-statics                                               \
-	-I $(INSTALL_DIR)/include
+	-I $(INSTALL_DIR)/include                                             \
+	-I $(INSTALL_DIR)/..                                                  \
 
 export CXXFLAGS=$(CFLAGS)
 

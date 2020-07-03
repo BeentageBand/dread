@@ -7,8 +7,7 @@
 
 #include "MifareLite.h"
 
-#include "../../Drivers/SPI/SPI.h"
-//#include <Arduino.h>
+#include "Drivers/SPI/SPI.h"
 
 #define MAX_LEN 16
 
@@ -178,7 +177,7 @@ void MifareLite::Init(void){
  */
 uint8_t MifareLite::Request(uint8_t reqMode, uint8_t *TagType){
 	uint8_t status;
-	uint backBits;			//the data bits that received
+	uint8_t backBits;			//the data bits that received
 	Write_MFRC522(BitFramingReg, 0x07);	//TxLastBists = BitFramingReg[2..0]	???
 	TagType[0] = reqMode;
 	status = ToCard(PCD_TRANSCEIVE, TagType, 1, TagType, &backBits);
@@ -199,13 +198,13 @@ uint8_t MifareLite::Request(uint8_t reqMode, uint8_t *TagType){
  *			 backLen--the length of return data
  * return?return MI_OK if successed
  */
-uint8_t MifareLite::ToCard(uint8_t command, uint8_t *sendData, uint8_t sendLen,uint8_t *backData, uint *backLen){
+uint8_t MifareLite::ToCard(uint8_t command, uint8_t *sendData, uint8_t sendLen,uint8_t *backData, uint8_t *backLen){
 	uint8_t status = MI_ERR;
 	uint8_t irqEn = 0x00;
 	uint8_t waitIRq = 0x00;
 	uint8_t lastBits;
 	uint8_t n;
-	uint i;
+	uint8_t i;
 	switch (command){
 		case PCD_AUTHENT:		//verify card password
 		{
@@ -300,7 +299,7 @@ uint8_t MifareLite::Anticoll(uint8_t *serNum){
 	uint8_t status;
 	int8_t i;
 	uint8_t serNumCheck = 0;
-	uint unLen;
+	uint8_t unLen;
 	//ClearBitMask(Status2Reg, 0x08);		//TempSensclear
 	//ClearBitMask(CollReg,0x80);			//ValuesAfterColl
 	Write_MFRC522(BitFramingReg, 0x00);		//TxLastBists = BitFramingReg[2..0]
@@ -330,7 +329,7 @@ uint8_t MifareLite::SelectTag(uint8_t *buffer, uint8_t *serNum){
 	uint8_t i;
 	uint8_t status;
 	uint8_t size;
-	uint recvBits;
+	uint8_t recvBits;
 	//ClearBitMask(Status2Reg, 0x08);			//MFCrypto1On=0
 	buffer[0] = PICC_SElECTTAG;
 	buffer[1] = 0x70;
@@ -361,7 +360,7 @@ uint8_t MifareLite::SelectTag(uint8_t *buffer, uint8_t *serNum){
  */
 uint8_t MifareLite::Auth(uint8_t authMode, uint8_t BlockAddr, uint8_t *Sectorkey, uint8_t *buff, uint8_t *serNum){
 	uint8_t status;
-	uint recvBits;
+	uint8_t recvBits;
 	uint8_t i;
 	//Verify command + block address + buffer password + card SN
 	buff[0] = authMode;
@@ -389,7 +388,7 @@ uint8_t MifareLite::Auth(uint8_t authMode, uint8_t BlockAddr, uint8_t *Sectorkey
  */
 uint8_t MifareLite::Read(uint8_t blockAddr, uint8_t *recvData){
 	uint8_t status;
-	uint unLen;
+	uint8_t unLen;
 	recvData[0] = PICC_READ;
 	recvData[1] = blockAddr;
 	CalulateCRC(recvData, 2, &recvData[2]);
@@ -408,7 +407,7 @@ uint8_t MifareLite::Read(uint8_t blockAddr, uint8_t *recvData){
  */
 uint8_t MifareLite::Write(uint8_t blockAddr, uint8_t *writeData){
 	uint8_t status;
-	uint recvBits;
+	uint8_t recvBits;
 	int8_t i;
 	uint8_t buff[18];
 	buff[0] = PICC_WRITE;
@@ -440,7 +439,7 @@ uint8_t MifareLite::Write(uint8_t blockAddr, uint8_t *writeData){
  * return?null
  */
 void MifareLite::Halt(void){
-	uint unLen;
+	uint8_t unLen;
 	uint8_t buff[4];
 	buff[0] = PICC_HALT;
 	buff[1] = 0;
@@ -557,14 +556,3 @@ void MifareLite::AntennaOn(void){
 void MifareLite::AntennaOff(void){
 	ClearBitMask(TxControlReg, 0x03);
 }
-///Changes
-/*
-String MifareLite::ParseStr(uint8_t *inData, uint8_t dataLen){
-    String str="";
-    uint8_t i;
-    for(i=0;i<dataLen;i++)
-    {
-        str+=inData[i];
-    }
-    return str;
-}/*/

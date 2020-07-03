@@ -25,9 +25,7 @@
 #define HardwareSerial_h
 
 #include <inttypes.h>
-//#warning #include "Stream.h" was changed to #include "../../Utilities/Print.h"
-//#include "Stream.h"
-#include "../../Utilities/Print.h"
+#include "Utilities/Print.h"
 
 // Define constants and variables for buffering incoming serial data.  We're
 // using a ring buffer (I think), in which head is the index of the location

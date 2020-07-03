@@ -9,8 +9,8 @@
 #ifndef SC16IS740_H_
 #define SC16IS740_H_
 //#include <Arduino.h>
-#include "../../Utilities/DreadSystem.h"
-#include "../../Drivers/SoftwareSerial/SoftwareSerial.h"
+#include "Utilities/DreadSystem.h"
+#include "Drivers/SoftwareSerial/SoftwareSerial.h"
 #include <avr/pgmspace.h>
 //SC6IS740 Internal Registers //Note: all the registers are <<3
 //General register set

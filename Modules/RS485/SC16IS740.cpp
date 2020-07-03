@@ -5,13 +5,14 @@
  *  Author: nedera03
  */ 
 #include "SC16IS740.h"
-#include "../../Drivers/SPI/SPI.h"
+#include "Drivers/SPI/SPI.h"
 
 SC16IS740::SC16IS740(uint8_t select_pin/*,HardwareSerial&port*/,SoftwareSerial&port)
 {
 	_ss_pin=select_pin;
 	_port=&port;
 }
+
 void SC16IS740::init(uint8_t xtal_freq)
 {
 	//_port->begin(debug_baudrate);

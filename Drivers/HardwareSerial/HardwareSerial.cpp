@@ -27,11 +27,8 @@
 #include <string.h>
 #include <inttypes.h>
 
-//#warning #include "Arduino.h" was changed to #include "../../Utilities/DreadSystem.h"
-//#include "Arduino.h"
-#include "../../Utilities/DreadSystem.h"
+#include "Utilities/DreadSystem.h"
 #include "HardwareSerial.h"
-//#warning you commented #include "HardwareSerial_private.h"
 #include "HardwareSerial_private.h"
 
 // this next line disables the entire HardwareSerial.cpp, 

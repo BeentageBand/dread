@@ -33,9 +33,7 @@ http://arduiniana.org.
 #define SoftwareSerial_h
 
 #include <inttypes.h>
-//#warning #include "Stream.h" was changed to #include "../../Utilities/Print.h"
-//#include "Stream.h"
-#include "../../Utilities/Print.h"
+#include "Utilities/Print.h"
 /******************************************************************************
 * Definitions
 ******************************************************************************/

@@ -12,10 +12,7 @@
 #define F_CPU 8000000L				/*Dread operates at 8MHz*/
 
 #include <stdlib.h>
-//#warning you commented and #include <math.h>
-
 #include <string.h>
-//#include <math.h>
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -23,8 +20,6 @@
 #include <avr/io.h>					/*include io SFR definitions */
 #include <avr/interrupt.h>
 
-//#warning you commented #include "binary.h"
-//#include "binary.h"
 
 #ifdef __cplusplus
 extern "C"{
@@ -219,19 +214,9 @@ extern "C"{
 #endif
 
 #ifdef __cplusplus
-//#warning you commented #include "WCharacter.h"
-//#include "WCharacter.h"
-//#warning you commented #include "WString.h"
-//#include "WString.h"
 
-//#warning #include "../Drivers/HardwareSerial/HardwareSerial.h" instead of #include "HardwareSerial.h"
-#include "../Drivers/HardwareSerial/HardwareSerial.h"
+#include "Drivers/HardwareSerial/HardwareSerial.h"
 
-//#warning #include "../Drivers/SoftwareSerial/SoftwareSerial.h"
-//#include "../Drivers/SoftwareSerial/SoftwareSerial.h"
-
-//#warning you commented #include "USBAPI.h"
-//#include "USBAPI.h"
 #if defined(HAVE_HWSERIAL0) && defined(HAVE_CDCSERIAL)
 #error "Targets with both UART0 and CDC serial not supported"
 #endif
@@ -254,6 +239,6 @@ long map(long, long, long, long, long);
 
 #endif
 
-#include "../Drivers/GPIO/Pinout.h"
+#include "Drivers/GPIO/Pinout.h"
 
 #endif /* DREADSYSTEM_H_ */

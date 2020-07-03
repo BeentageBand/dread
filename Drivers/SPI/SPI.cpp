@@ -8,7 +8,7 @@
  * published by the Free Software Foundation.
  */
 
-#include "../GPIO/Pinout.h"
+#include "Drivers/GPIO/Pinout.h"
 #include "SPI.h"
 
 SPIClass SPI;

@@ -1,7 +1,7 @@
 #include "CardReader.h"
-#include "../../Modules/HID/HID.h"
-#include "../../Modules/SD/SD.h"
-#include "../../Support/Util/Locale.h"
+#include "Modules/HID/HID.h"
+#include "Modules/SD/SD.h"
+#include "Support/Util/Locale.h"
 
 CardReader::CardReader(MifareLite & mifare, Persistence & persistence, Print & logger)
     : mifare(&mifare), persistence(&persistence), logger(&logger),

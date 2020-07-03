@@ -1,8 +1,8 @@
 #ifndef PERSISTENCE_H
 #define PERSISTENCE_H
 
-#include "../../Modules/SD/SD.h"
-#include "../../Utilities/Print.h"
+#include "Modules/SD/SD.h"
+#include "Utilities/Print.h"
 
 #define PERSISTENCE_FILENAME_SIZE 13U
 class Persistence

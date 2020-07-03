@@ -12,9 +12,7 @@
 #define _SPI_H_INCLUDED
 
 #include <stdio.h>
-//#warning you commented #include <Arduino.h>
-//#include <Arduino.h>
-#include "../../Utilities/DreadSystem.h"
+#include "Utilities/DreadSystem.h"
 #include <avr/pgmspace.h>
 
 #define SPI_CLOCK_DIV4 0x00

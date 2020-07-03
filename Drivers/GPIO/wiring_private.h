@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "../../Utilities/DreadSystem.h"
+#include "Utilities/DreadSystem.h"
 
 #ifdef __cplusplus
 extern "C"{

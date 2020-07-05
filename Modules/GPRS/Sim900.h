@@ -37,6 +37,7 @@ class Sim900{
 	boolean receiveStream(uint8_t*stream,uint16_t length);
 	void hard2Soft(void);
 	void soft2Hard(void);
+	inline Print & getPrint(void) {return *_hard_port; }
 	private:
 	void printP(const uint8_t*atcmd);
 	SoftwareSerial*_soft_port;

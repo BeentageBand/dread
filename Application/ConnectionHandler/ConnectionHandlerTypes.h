@@ -1,0 +1,16 @@
+#ifndef CONNECTION_HANDLER_TYPES_H
+#define CONNECTION_HANDLER_TYPES_H
+
+enum Signal {
+    RESET_SIGNAL,
+    CGREG_SIGNAL,
+    SIGNAL_END
+};
+
+enum State {
+    WF_CGREG_1_STATE,
+    WF_OK_STATE,
+    STATE_END
+};
+
+#endif // !CONNECTION_HANDLER_TYPES_H

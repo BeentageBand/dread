@@ -54,11 +54,11 @@ void CardReader::ReadAndStore(uint8_t * key, uint8_t const size)
                   mifare->Halt();
 
                   //Writing File Method
-                  result=persistence->beginTransaction();
+                  result = persistence->beginTransaction(WRITE_TRANSACTION);
                   if (result)
                   {
                      //Prints in file the following format: ID \t RFIDContent(as a decimal number) \t date (dd/mm/yyyy) \t hour (hh:mm) \t Serialnum
-                     uint32_t record = *((uint32_t *)buffer);
+                     uint32_t record = *reinterpret_cast<uint32_t *>(buffer);
                      Locale::get().getDateTime(buffer);
                      persistence->writeRecord(record, buffer, DATETIME_SIZE);
                      persistence->commitTransaction();

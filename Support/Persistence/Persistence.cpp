@@ -38,18 +38,33 @@ void Persistence::writeRecord(uint32_t const record, uint8_t const * datetime, u
   logger->println();
 }
 
-bool Persistence::beginTransaction(void)
-{
+bool Persistence::beginTransaction(uint8_t const transaction) {
   SD.begin(SD_SS);
-  *file = SD.open(file_name, FILE_WRITE);
+
+  uint8_t file_mode;
+
+  switch (transaction) {
+     case READ_TRANSACTION: file_mode = FILE_READ; break;
+     case WRITE_TRANSACTION: file_mode = FILE_WRITE; break;
+     default: return false;
+  }
+
+  *file = SD.open(file_name, file_mode);
   return *file;
 }
 
-void Persistence::commitTransaction(void)
-{
+void Persistence::commitTransaction(void) {
   file->close();
 }
 
+
+char const * Persistence::getFilename(void) {
+   return file_name;
+}
+
+uint32_t Persistence::getSize(void) {
+   return file->size();
+}
 
 bool Persistence::deprecateFilename(void)
 {

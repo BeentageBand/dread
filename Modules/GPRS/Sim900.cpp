@@ -55,7 +55,7 @@ void Sim900::ATCmdC(const uint8_t*atcmd)
 	_hard_port->println();
 }
 
-boolean Sim900::matchResponse(const uint8_t*expected_response,uint8_t*ptr)
+boolean Sim900::matchResponse(const uint8_t*expected_response,uint8_t & ptr)
 {
 	boolean result=false;
 	uint8_t receive_byte;
@@ -63,20 +63,20 @@ boolean Sim900::matchResponse(const uint8_t*expected_response,uint8_t*ptr)
 	{
 			receive_byte=_hard_port->read();
 			//Compare, if the char is equal, the pointer advance, otherwise, it resets to zero.
-			if(receive_byte==pgm_read_byte(expected_response+(*ptr))){
-				++(*ptr);
+			if(receive_byte==pgm_read_byte(expected_response+ptr)){
+				++ptr;
 				}else{
-				(*ptr)=0;
+				ptr = 0;
 			}
 			//Determine if the ptr
-			result= pgm_read_byte(expected_response+(*ptr))=='\r';
+			result= pgm_read_byte(expected_response+ptr)=='\r';
 			_soft_port->write(receive_byte);
 			//wdt_reset();
 	}
 	return result;
 }
 
-boolean Sim900::matchResponseC(const uint8_t*expected_response,uint8_t*ptr)
+boolean Sim900::matchResponseC(const uint8_t * expected_response,uint8_t & ptr)
 {
 	boolean result=false;
 	//Result may return:
@@ -89,13 +89,13 @@ boolean Sim900::matchResponseC(const uint8_t*expected_response,uint8_t*ptr)
 	{
 		receive_byte=_hard_port->read();
 		
-		if(receive_byte==expected_response[(*ptr)]){
-			++(*ptr);
+		if(receive_byte==expected_response[ptr]){
+			++ptr;
 			}else{
-			(*ptr)=0;
+			ptr = 0;
 		}
 		//Determine if the ptr
-		result= expected_response[(*ptr)]=='\r';
+		result= expected_response[ptr]=='\r';
 		_soft_port->write(receive_byte);
 		//wdt_reset();
 	}
@@ -169,7 +169,7 @@ boolean Sim900::waitFor(const uint8_t*expected_response,const uint32_t timeout)
 	
 	while((millis()-time)<timeout && !success)
 	{
-		success=matchResponse(expected_response,&ptr);
+		success=matchResponse(expected_response, ptr);
 	}
 	_soft_port->println();
 	
@@ -183,7 +183,7 @@ boolean Sim900::waitForC(const uint8_t*expected_response,const uint32_t timeout)
 	uint8_t ptr=0;
 	while((millis()-time)<timeout && !success)
 	{
-		success=matchResponseC(expected_response,&ptr);
+		success=matchResponseC(expected_response, ptr);
 	}
 	_soft_port->println();
 	return success;

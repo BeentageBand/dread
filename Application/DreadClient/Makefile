@@ -1,6 +1,6 @@
 SRC=$(wildcard *.cpp)
 INC=$(wildcard *.h)
-LIB=lib$(PKG)-dreadclient.a
+LIB=lib$(PKG)-dread-client.a
 
 .PHONY: all clean
 

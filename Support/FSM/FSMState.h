@@ -16,7 +16,7 @@ namespace fsm {
 
         uint8_t signal;
         uint8_t stid;
-        bool (*guard) (Machine &, State &);
+        bool (*guard) (Machine &, State const &);
         bool (*action) (Machine &);
     };
 
@@ -28,7 +28,7 @@ namespace fsm {
 
         public:
         State(uint8_t const id, Transition * transition, uint8_t const ntransition);
-        inline uint8_t get_stid(void) {return id;}
+        inline uint8_t get_stid(void) const {return id;}
         uint8_t next_state(uint8_t const signal, Transition & transition);
     };
 }

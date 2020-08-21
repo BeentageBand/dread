@@ -1,4 +1,5 @@
 #include "FSM.h"
+#include <stdlib.h>
 
 using namespace fsm;
 
@@ -15,14 +16,14 @@ void Machine::dispatch(uint8_t const signal) {
         next_state = state.next_state(signal, transition);
     }
 
-    State to_state = get_state(next_state);
+    State const to_state = get_state(next_state);
     
     if (NO_STATE != to_state.get_stid()) {
-        transition(transition, to_state);
+        this->transition(transition, to_state);
     }
 }
 
-bool Machine::transition(Transition & transition, State & next_st) {
+bool Machine::transition(Transition & transition, State const & next_st) {
     if (NULL == transition.guard || transition.guard(*this, next_st)) return false;
 
     current_state = next_st.get_stid();
@@ -37,7 +38,7 @@ State Machine::get_state(uint8_t const state) {
     if (state >= nstates) return State(NO_STATE, NULL, 0);
 
     Chart * it = chart;
-    for (i = 0; i < nstates; ++i) {
+    for (uint8_t i = 0; i < nstates; ++i) {
         if (chart->state == state) 
             break;
     }

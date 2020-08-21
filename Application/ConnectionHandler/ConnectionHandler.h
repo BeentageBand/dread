@@ -18,7 +18,7 @@ class ConnectionHandler : public fsm::Machine {
 
     void handleConnectionStatus(void);
     bool sendSignal(uint8_t const signal);
-
+    void listenToModem(void);
     private:
 
 };

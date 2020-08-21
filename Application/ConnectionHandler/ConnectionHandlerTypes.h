@@ -8,8 +8,7 @@ enum Signal {
 };
 
 enum State {
-    WF_CGREG_1_STATE,
-    WF_OK_STATE,
+
     STATE_END
 };
 

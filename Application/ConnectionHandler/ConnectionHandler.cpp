@@ -15,6 +15,10 @@ void ConnectionHandler::handleConnectionStatus(void) {
     dispatch(signal);
 }
 
+void ConnectionHandler::listenToModem(void) {
+
+}
+
 bool ConnectionHandler::sendSignal(uint8_t const signal) {
     if ((tl + 1) == hd || signal > SIGNAL_END) return false;
 

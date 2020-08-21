@@ -8,203 +8,48 @@
 //////////////////////////////////////////////////////////////////////////
 #include "Dread.h"
 #include "Application/CardReader/CardReader.h"
+#include "Application/ConnectionHandler/ConnectionHandler.h"
+#include "Application/DreadClient/DreadClient.h"
 #include "Modules/HID/HID.h"
 #include "Support/Persistence/Persistence.h"
 #include "Support/Scheduler/Scheduler.h"
+#include "Support/Modem/Modem.h"
 //************************FLASH CONSTANTS*******************************//
 //////////////////////////////////////////////////////////////////////////
 /*
-typedef enum
-{
-   READ_CCLK_RESTART, WAIT_CGREG, SEND_AT_FROM_FILE,
-   WAIT_AT_FROM_FILE,
-   }gprs_state_t;*/
-//Interrupts
-//~~~~
-//******GSM
-//RESPONSES
-const uint8_t plusCGREG[] PROGMEM=            "CGREG: 1,\r";
-const uint8_t PSUTTZ[] PROGMEM=               "*PSUTTZ\r";
-const uint8_t OK[] PROGMEM=                  "OK\r";
-const uint8_t plusCCLK[] PROGMEM=            "CCLK: \r";
-//const uint8_t plusFTP_PUT_Filename[] PROGMEM=   "FTPPUTNAME: \"\r";
-const uint8_t plusFTP_PUT[] PROGMEM =         "FTPPUT:1,1,\r";// next goes lengthLENGTH
-const uint8_t plusFTP_PUT_Closed[] PROGMEM=      "FTPPUT:1,0\r";
-const uint8_t plusFTP_PUT_Length[] PROGMEM=      "FTPPUT:2,\r";
-//const uint8_t plusFTP_GET_Closed[] PROGMEM=   "FTPGET:1,0\r";
-//const uint8_t plusFTP_GET_Available[] PROGMEM=   "FTPGET:1,1\r";
-//const uint8_t plusFTP_GET_Length[] PROGMEM=   "FTPGET:2,\r";
-//*Commands
-//const uint8_t FTP_GET_Filename[] PROGMEM=      "FTPGETNAME=\r";
-const uint8_t FTPSCONT[] PROGMEM=            "FTPSCONT\r";
-const uint8_t RESET[] PROGMEM=               "CFUN=1,1\r";
-//const uint8_t readFTPSCONT[] PROGMEM=         "FTPSCONT?\r";
-const uint8_t readCCLK[] PROGMEM=            "CCLK?\r";
-const uint8_t FTP_PUT_Filename[] PROGMEM=      "FTPPUTNAME=\r";
-const uint8_t FTP_PUT_Open[] PROGMEM=         "FTPPUT=1\r";
-const uint8_t FTP_PUT_Length[] PROGMEM=         "FTPPUT=2,\r";
-const uint8_t FTP_PUT_Close[] PROGMEM=         "FTPPUT=2,0\r";
-//const uint8_t FTP_GET_Open[] PROGMEM=         "FTPGET=1\r";
-//const uint8_t FTP_GET_Length[] PROGMEM=      "FTPGET=2,\r";
-////RFID
-//~~~~
-//RS485
-//~~~~
 //HID
 static uint8_t hid_led = LO_ALL;
 //~~~~
-//************************GLOBAL VARIABLES******************************//
+/************************GLOBAL VARIABLES******************************/
 ////////////////////////////////////////////////////////////////////////////
-static uint8_t buffer[16];
-//Interrupts
-static uint8_t date[23];         /*Stores CCLK: "14/02/14,13:45:08-28"*/
-/*0123456789012345678901*/
-
 //FAT  
 static File file;
-static char file_download[]="I1Z.txt";
-static char file_name[13];               /*Stores FTPPUTNAME: "P1I006TC.txt"*/
-/*012345678901*/
-static uint8_t file_line[53];
-static uint16_t  file_ptr;
 static char CONFIG_file[]="config.txt";   /*config.txt*/
-//GSM
-static uint8_t gsm_task;
-static uint8_t gsm_pointer;
-static uint32_t gsm_timer;
 
-//RFID
-static uint8_t Mfr_Key[]={0x00,0x00,0x0B,0xAC,0xAF,0xEA};  //Nedera Key
-
-//RS485
-/*
-uint8_t add_book[NET_MAX][3];
-uint8_t add_ptr;
-uint8_t reg_try;*/
-//HID
 //************************CLASSES******************************//
 //////////////////////////////////////////////////////////////////////////
 //Interrupts
 //~~~~
-//FAT
 //~~~~
 //Debug
 static SoftwareSerial SoftSerial(DBG_RX,DBG_TX);
+//FAT
+static uint8_t upload_prefix[4] = "I1Z";
+static Persistence persistence(file, upload_prefix, SoftSerial);
 //GSM
 static Sim900 gprs(Serial,SoftSerial);
+static Modem modem(file, gprs, SoftSerial);
 //RFID
+static uint8_t Mfr_Key[]={0x00,0x00,0x0B,0xAC,0xAF,0xEA};  //Nedera Key
 static MifareLite rfid(MFR_SS,MFR_NRST);
 //RS485
 //~~~~
-//HID
-//~~~~
-static uint8_t upload_prefix[4] = "I1Z";
-static Persistence persistence(file, upload_prefix, SoftSerial);
 static CardReader card_reader(rfid, persistence, SoftSerial);
+static ConnectionHandler connection_handler(modem, SoftSerial);
+static DreadClient dread_client(persistence, modem, SoftSerial);
 
-Scheduler::Subscription hid_subscription(HID::CheckTime, INT_SEC);
-
-//////////////////////////////////////////////////////////////////////////
-////**********************MainFUNCTIONS**********************/////////////
-
-//** Function: setLed(char led_setup)
-/* Description:
-   This function makes HID code "easy" to read or debug. Handles 16 led behaviors, all of them are 4 bit chars. The behaviors are defined
-   up in the definition code in this cpp file.
-   Variables required:
-   - red      state of the HID_RLD pin.
-   - green      the unsigned long generated. the function return id.
-   - blink_red   controls the red led blink (not blink)
-   - blink_grn   controls the green led blink (not blink)
-   - led_setup  used to configure led behavior.
-   * Notes:
-   - pins need to be set as OUTPUT.
-   - The blink frequency is determined by INT_PERIOD, and the timer interrupt should have a routine write this behavior to the portpin outputs.
-   - Dual led can generate 3 colors: red, orange and green, each with blinking and toggling between colors.
-   - A buzzer pin behavior may be implemented as well.
-
-*/
-static void setLed(uint8_t led_setup) {}
-
-static boolean nextLine(const char*filename)
-{
-   boolean file_end=false;
-
-   SD.begin(SD_SS);                        /*Initiate SD*/
-   //Open the file with name config.txt or DReadID.txt
-   //check if the method will find next line??
-   file=SD.open(filename,FILE_READ);
-   if(file)
-   {
-      uint8_t in_byte;
-      uint8_t* line_cpy=file_line;
-      file.seek(file_ptr);
-      do
-      {
-         file_end=file.available()<=0;         /*Check if there's data on file.*/
-         if(!file_end)
-         {
-            in_byte=file.read();
-            *line_cpy=in_byte;
-            ++line_cpy;
-         }
-      } while (!file_end && in_byte!='\r');
-   }
-   else
-   {
-      SoftSerial.write('U');
-      SoftSerial.write('n');
-      SoftSerial.println();
-   }
-   file_ptr=file.position();
-   file.close();
-
-   return file_end;
-}
-//** Function: DumpFile()
-/* Description:
-   The method removes the File from the SD card. After that, generates a new file_name in order to
-   continue reading S150 Mifare Cards. 
-   Checks if file exist to remove it, if not it only switches to RFID COMM.
-   Generates a new file_name using generateFileNameIUD() function after the las file was succesfully removed.
-   Variables required:
-   - SoftSerial       A COM port for debugging purposes. It bulks program size, so the final version of the code this methods are
-            going to be commented (not compiled);
-   - SD       communicates with SD. For creating/opening/dumping files.
-   - file       object which uses FAT16 protocol for file management. Writes or read files.
-   - rfid      object that switches to RFID SPI comm after DumpFile is done.
-   relevant and developed in FTPDownloadGPRS programs.
- * Notes:
-   - SoftSerial strings were write in short pseudo code, reduce program size.
-   - saveFileName() may be not necessary,
-   - if readFileName() is commented, be sure saveFileName() is commented too, if not it will cause program problems because code is still
-     compilable.
-   - the SD.exist is just for error issues, the confirmation may not be necessary because DumpFile is a function inside FTPUploadGPRS()
-*/
-boolean inline DumpFile(){
-   rfid.Init();                     /*Reboot RFID*/
-   return true;
-}
-//** Function: generateFileNameIUD()
-/* Description:
-   The function modifies the file_name array and generates a "new" file_name for the up loadable file. The reason is because if DRead upload a
-   file with the same name as one in the server, the file will be replaced, that may cause a data loses.
-   The filename is going to be generated by the following parameters: D-ReadID+FileUID+".txt".
-   > D-ReadID: is the Identifier of the D-Read, compound by 3 alphanumeric characters (No case sensitive). Each D-Read has its own.
-   > FileUID: this ID is generated for unique file, the intention is to not overwrite files in the server. Compound by 5 alphanumeric characters
-   (No case sensitive), the D-Read can generate 1679616 unique files. If D-Read generate a new file every minutes, D-Read would overflow the UID
-   until 7 years later!!, considering that D-Read is saving RFID tags all the time, which is not the case and UID generation can last even longer.
-   Variables required:
-   - file_name      Is modified during the process.
-   - ptr         local val which shifts << the file_name array. the char 3 to 7 of the array are the 5 UID chars.
- * Notes:
-   - IUD has 5 alphanumeric characters, it will permute 36^5 different forms.
-
-*/
-
-inline boolean uploadPacket()
-{
-}
+static Scheduler::Subscription hid_subscription(HID::CheckTime, INT_SEC);
+static Scheduler::Subscription connection_subscription(DreadClient::CheckTime, 5 * INT_MINUTES);
 
 ////SETUP
 //** Function: ConfigSD()
@@ -229,9 +74,9 @@ inline void ConfigSD()
    while (!SD.begin(SD_SS))
    {
       SoftSerial.write('.');
-      setLed(BLK_RED);
+      HID::get().setLed(BLK_RED);
    }
-   setLed(BLK_ORG);
+   HID::get().setLed(BLK_ORG);
    //readFileName();
 }
 //** Function: ConfigHID()
@@ -245,43 +90,24 @@ inline void ConfigSD()
 */
 inline void ConfigHID()
 {
-   hid_led=RED_GRN;
-   setLed(hid_led);
+   HID::get().setLed(RED_GRN);
 }
 
 inline void ConfigGPRS()
 {
-   boolean result=false;                        /*Variable to store return value of gprs methods.*/
-   uint8_t response_ptr=0;
-   uint32_t time=millis();
+   /*Variable to store return value of gprs methods.*/
+  /*Wait for the modem to send "*PSUTTZ..".
+  Clock will be sync an ready to read RFID*/
 
-   file_ptr=0;
-   while(!result)
-   {
-      result=gprs.matchResponse(PSUTTZ,&response_ptr);/*Wait for the modem to send "*PSUTTZ..".
-                                          Clock will be sync an ready to read RFID*/
-
-      if(!result &&                           /*If modem do not reg to network, at least PSUTTZ,
-                                          RESET modem and repeat the sequence.*/
-      (millis()-time)>(uint32_t)(GSM_MOUT<<2))      /*FTP_TOUT shift left to multiply by 4 (shift left 2).*/
-      {
-         gprs.ATCmd(RESET);
-         time=millis();
-      }
-   }
-
-   /*Blinks green led if was able to register to network. Blinks red led if not.*/
-   nextLine(CONFIG_file);                        /*Reads config.txt inside SD. Firs line is +CGREG: 1,*/
-   result=gprs.waitForC(file_line,GSM_TOUT);         /*Waits for modem to send "+CGREG: 1,1".
-                                          Determines if modem was able to be registered to the Network.*/
-   if (!result)
-   {
-      setLed(BLK_RED);                        /*Blinks green led if  not able to register to network.*/
-   }
-   else
-   {
-      setLed(BLK_GRN);                        /*Blinks green led if was able to register to network.*/
-   }
+  /*If modem do not reg to network, at least PSUTTZ,
+  RESET modem and repeat the sequence.*/
+  /*FTP_TOUT shift left to multiply by 4 (shift left 2).*/
+  /*Blinks green led if was able to register to network. Blinks red led if not.*/
+  /*Reads config.txt inside SD. Firs line is +CGREG: 1,*/
+  /*Waits for modem to send "+CGREG: 1,1".
+  Determines if modem was able to be registered to the Network.*/
+  /*Blinks green led if  not able to register to network.*/
+  /*Blinks green led if was able to register to network.*/
 
 /*  Deprecated in V 1.3
    Reasons: The config file was executed to set the SIM900 modem parameter in order to use the GPRS with APN account.
@@ -303,193 +129,29 @@ inline void ConfigGPRS()
  */
 
    ////config.txt will get the last saved PUT filename from SIM900m
-   nextLine(CONFIG_file);
-   gprs.ATCmdC(file_line);                        /*AT+FTPSCONT?*/
-   nextLine(CONFIG_file);
-   gprs.waitForC(file_line,GSM_TOUT);               /*+FTPPUTNAME: "*/
-
-   gprs.receiveStream((uint8_t*)file_name,
-                  sizeof(file_name)-1);            /*Reads last saved file_name from modem*/
-   gprs.waitFor(OK,GSM_TOUT);                     /*Modem sends extra OK after sending ftpputname*/
+   /*AT+FTPSCONT?*/
+   /*+FTPPUTNAME: "*/
+  /*Reads last saved file_name from modem*/
+  /*Modem sends extra OK after sending ftpputname*/
    //SoftSerial.write((uint8_t*)file_name,sizeof(file_name)-1);
    //SoftSerial.println();
    //Update Date
-   nextLine(CONFIG_file);
-   gprs.ATCmdC(file_line);                        /*"AT+CCLK?"*/
-   nextLine(CONFIG_file);
-   gprs.waitForC(file_line,GSM_MOUT);               /*"+CCLK: */
+   /*"AT+CCLK?"*/
+   /*"+CCLK: */
 
-   gprs.receiveStream(date,sizeof(date)-1);
-   date[9]='\t';                              /*change SIM900 CCLK format = "date,hour"
-                                          to "date   hour"*/
-   gprs.waitFor(OK,GSM_TOUT);                     /*Modem sends extra OK after sending cclk*/
+   /*change SIM900 CCLK format = "date,hour"
+   to "date   hour"*/
+   /*Modem sends extra OK after sending cclk*/
    //SoftSerial.write(date,sizeof(date)-1);
    //SoftSerial.println();
    //Read config.txt file to execute the config sequence.
-   do
-   {
-      result=nextLine(CONFIG_file);
-
-      gprs.ATCmdC(file_line);
-      result=nextLine(CONFIG_file);
-
-      gprs.waitForC(file_line,GSM_MOUT);
-   } while (!result);
-
-   hid_led=LO_ALL;
-   setLed(hid_led);
-}
-inline void UploadGPRS()
-{
-   boolean result;                                 /*Stores return value of gprs methods*/
-   switch (gsm_task)
-   {
-      case 0:
-         ++gsm_task;                              /*There is no condition in case 0, only changes subject*/
-         /*The upload will be done. Add time stamp*/
-
-         //ASK SIM900's RTC current date*****************
-         nextLine(file_download);                  /*Open file to the starting point.*/
-         gprs.ATCmdC(file_line);                     /*Sends file_line= "AT+CCLK?"*/
-
-         nextLine(file_download);
-         gprs.waitForC(file_line,GSM_MOUT);            /* Waits for file_line= "+CCLK: "*/
-
-         gprs.receiveStream(date,sizeof(date)-1);      /*Reads and copies CCLK to date[]*/
-         date[9]='\t';                           /*Changes SIM900 CLK format = "date,hour" to "date   hour"*/
-
-         //SoftSerial.write(date,22);                  /*Prints date[] to confirm copy*/
-         //SoftSerial.println();
-         gprs.waitFor(OK,GSM_TOUT);                  /*Waits for "OK". It is sent after CCLK sends date stream*/
-
-         //Saves modem changes and restarts modem********
-         gprs.setAtCmd(FTPSCONT,OK,GSM_TOUT);         /*Sends from PROGMEM FTPSCONT. FTPSCONT can be included inside the file.
-                                             Waits for OK*/
-         gprs.ATCmd(RESET);                        /*Sends PROGMEM RESET. RESET can be included inside the file.*/
-
-         gsm_pointer=0;                           /*matchResponse() uses gsm_pointer as a pointer. MatchResponse() call
-                                             is similar to waitFor() but there is no main code timeout waiting, moves
-                                             timeout comparison to background.*/
-         gsm_timer=millis();                        /*starts the timeout.*/
-         break;
-      case 1:
-         if ((millis()-gsm_timer)>GSM_MOUT||gprs.matchResponse(plusCGREG,&gsm_pointer))
-         {
-            ++gsm_task;
-         }
-         break;
-      case 2:
-         nextLine(file_download);
-      case 3: //Task 4, send ATcmd from file
-         gprs.ATCmdC(file_line);
-         if(nextLine(file_download))
-         {
-            gsm_task=5;
-         }
-         else
-         {
-            gsm_task=4;
-         }
-
-         gsm_pointer=0;
-         gsm_timer=millis();
-         break;
-
-      case 4://Task 5, match response from file, occurs when file haven't finished
-         if ((millis()-gsm_timer)>GSM_TOUT||gprs.matchResponseC(file_line,&gsm_pointer))
-         {
-            gsm_task=2;
-            //SoftSerial.print("Time: ");
-            //SoftSerial.println(gsm_timer,DEC);
-         }
-         break;
-      case 5://Task 5, match response from file, occurs when file have finished
-         if ((millis()-gsm_timer)>GSM_TOUT||gprs.matchResponseC(file_line,&gsm_pointer))
-         {
-            ++gsm_task;
-         }
-         break;
-      case 6:
-         gprs.setAtCmd(FTP_PUT_Open,OK,GSM_TOUT);   /*Open a PUT session*/
-         ++gsm_task;
-         gsm_pointer=0;
-         gsm_timer=millis();
-         hid_led=BLK_BLU;
-         setLed(hid_led);
-
-         break;
-      case 7:
-         if ((millis()-gsm_timer)>GSM_MOUT||
-            gprs.matchResponse(plusFTP_PUT,&gsm_pointer))
-         {
-            ++gsm_task;
-         }
-         break;
-      case 8:
-         result=(millis()-gsm_timer)<GSM_MOUT;      /*Validate if the FTP server responded the FTP session request*/
-
-         if (result)
-         {
-            result=uploadPacket();                     /*Resolve uploadPacket routine, if the routine was done successfully,
-                                                the Dread continue to dump the file uploaded.*/
-            if(result)
-            {
-               DumpFile();                           /*Calls DumpFile Method.Removes current File,
-                                                 generates a new File_name*/
-               //Uploads new file name to SIM900 Settings**
-               buffer[0]='\"';                        /*Add "" to buffer, file_name need "" as the parameter in filename.*/
-               buffer[13]='\"';
-
-               for(uint8_t counter=0;counter<12;counter++)   /*Copies file_name on buffer.*/
-               {
-                  buffer[counter+1]=file_name[counter];
-               }
-
-               gprs.setAtParameter(FTP_PUT_Filename,OK,
-                              buffer,14,GSM_TOUT);   /*Sends the filename command with file_name copied on buffer*/
-            }
-            else
-            {
-               SD.begin(SD_SS);                     /*If the record failed to upload, add the timestamp is added at the
-                                                end of the file*/
-               file= SD.open(file_name,FILE_WRITE);
-
-               if (file)
-               {
-                  for (uint8_t i=1;i< 18;++i)            /*Print time stamp. Time stamp length is 17 bytes.
-                                                date[] has 1 byte offset, so limits are 1-18*/
-                  {
-                     file.write(date[i]);
-                  }
-                  file.println();                     /*Print \r*/
-               }
-               file.close();
-            }
-         }
-
-         if(!result)                                 /*If a part of the routine fail, the execution is
-                                                stopped and the error is thrown to the HID led,
-                                                blinking an violet led.*/
-         {
-            hid_led=BLK_VLT;
-            setLed(hid_led);
-         }
-
-         gsm_task++;
-         break;
-      default:
-      gprs.setAtCmd(readCCLK,plusCCLK,GSM_TOUT);
-      gprs.receiveStream(date,sizeof(date)-1);      /*Reads and copies CCLK to date[]*/
-      date[9]='\t';                           /*Changes SIM900 CLK format = "date,hour" to "date   hour"*/
-      gprs.waitFor(OK,GSM_TOUT);
-      break;
-   }
 }
 
 void setup()
 {
 
   Scheduler::get().subscribe(&hid_subscription);
+  Scheduler::get().subscribe(&connection_subscription);
 
    //Init Serials GPRS and debug
    gprs.begin(GSM_BAUD,GSM_RST,GSM_NPWD);
@@ -515,5 +177,7 @@ void setup()
 void loop()
 {
   card_reader.ReadAndStore(Mfr_Key, sizeof(Mfr_Key));
-  UploadGPRS();
+  connection_handler.handleConnectionStatus();
+  connection_handler.listenToModem();
+  dread_client.uploadFromPersistence();
 }

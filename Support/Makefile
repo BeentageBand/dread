@@ -1,5 +1,5 @@
 export PKG=support
-SUBDIRS=Scheduler Persistence Util
+SUBDIRS=FSM Modem Persistence Scheduler Util 
 
 .PHONY: all clean $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all)
 

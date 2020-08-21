@@ -92,13 +92,6 @@
 ////INSIDE Functions
 void inline beep();
 //static void usedAdd(uint8_t *book_ptr);
-static void setLed(uint8_t led_setup);
-static boolean nextLine(const char*filename);
-uint32_t PrintLong(const uint8_t*str,uint8_t ptr);
-boolean equalStr(const uint8_t*str1,const uint8_t*str2);
-inline boolean DumpFile();
-inline void generateFileNameIUD();
-inline boolean uploadPacket();
 ////INTERRUPTS
 void CheckTime();
 ////SETUP

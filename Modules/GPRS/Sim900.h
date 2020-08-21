@@ -27,8 +27,8 @@ class Sim900{
 	void ATCmd(const uint8_t*atcmd);
 	void ATCmdC(const uint8_t*atcmd);
 	boolean setAtCmd(const uint8_t*atcmd,const uint8_t*expected_response,const uint32_t timeout);
-	boolean matchResponse(const uint8_t*expected_response,uint8_t* ptr);
-	boolean matchResponseC(const uint8_t*expected_response,uint8_t*ptr);
+	boolean matchResponse(const uint8_t*expected_response,uint8_t & ptr);
+	boolean matchResponseC(const uint8_t*expected_response,uint8_t & ptr);
 	boolean waitFor(const uint8_t*expected_response,uint32_t timeout);
 	boolean waitForC(const uint8_t*expected_response,uint32_t timeout);
 	void send(const uint8_t*buffer,uint16_t send_len);

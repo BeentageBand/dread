@@ -6,18 +6,17 @@
  */ 
 #include "SC16IS740.h"
 #include "Drivers/SPI/SPI.h"
+#include "Utilities/DreadSystem.h"
 
-SC16IS740::SC16IS740(uint8_t select_pin/*,HardwareSerial&port*/,SoftwareSerial&port)
-{
-	_ss_pin=select_pin;
-	_port=&port;
-}
+SC16IS740::SC16IS740(uint8_t const ss_pin, Print & logger)
+  : ss_pin(ss_pin), logger(&logger)
+{}
 
-void SC16IS740::init(uint8_t xtal_freq)
+void SC16IS740::init(uint8_t const xtal_freq)
 {
-	//_port->begin(debug_baudrate);
-	//_port->println("InitSC16");
-	pinMode(_ss_pin,OUTPUT);
+	//logger->begin(debug_baudrate);
+	//logger->println("InitSC16");
+	pinMode(ss_pin,OUTPUT);
 	write_SC16IS(LCR, 0x80); // 0x80 to program baud rate
 	
 	write_SC16IS(DLL, xtal_freq); // 0x06=19.2K with X1=1.8432 MHz
@@ -65,23 +64,23 @@ uint8_t SC16IS740::processResponse(uint8_t*response,const uint8_t first_char,con
 		if(available()>0)
 		{
 			*response=read();//Read until initial character match
-			//_port->write(response[pointer]);
+			//logger->write(response[pointer]);
 		}
 		time=(uint16_t)(millis()-init_time);
 	} while (*response!=first_char && time<timeout);
-	//_port->println("first matched");
+	//logger->println("first matched");
 	do 
 	{
 		if(available()>0)
 		{
 			response[pointer]=read();//Read until initial character match
-			//_port->write(response[pointer]);
+			//logger->write(response[pointer]);
 			++pointer;
 		}
 		time=millis()-init_time;
 	} while (response[pointer-1]!=last_char && pointer<response_size && time<timeout);
-	//_port->print("Time:");
-	//_port->println(time,DEC);
+	//logger->print("Time:");
+	//logger->println(time,DEC);
 	//Return if the message matches length,initial and final characters, in other words, matches format.
 	if (pointer==response_size && response[response_size-1]==last_char)
 	{
@@ -99,21 +98,21 @@ uint8_t SC16IS740::processResponse(uint8_t*response,const uint8_t first_char,con
 	{
 		return SC_RESPOND_NOFORMAT; //Receives a
 	}
-	/*_port->write("Left on port:",11);
-	_port->printNumber(available(),DEC);
-	_port->println();*/
+	/*logger->write("Left on port:",11);
+	logger->printNumber(available(),DEC);
+	logger->println();*/
 }
 void SC16IS740::send(const uint8_t*buffer,uint8_t length)
 {
 	write_SC16IS(MCR,0x00);//Enable Tx RS485
-	digitalWrite(_ss_pin,LOW);
+	digitalWrite(ss_pin,LOW);
 	SPI.transfer(THR);
 	while (length--)
 	{
 		SPI.transfer(*buffer);
 		++buffer;
 	}
-	digitalWrite(_ss_pin,HIGH);
+	digitalWrite(ss_pin,HIGH);
 	do
 	{	
 		length=read_SC16IS(LSR)&0x20; /*recycles length to obtain result*/
@@ -125,7 +124,7 @@ void SC16IS740::sendP(const uint8_t*buffer)
 {
 	uint8_t i=0;
 	write_SC16IS(MCR,0x00);//Enable Tx RS485
-	digitalWrite(_ss_pin,LOW);
+	digitalWrite(ss_pin,LOW);
 	SPI.transfer(THR);
 	do
 	{
@@ -133,7 +132,7 @@ void SC16IS740::sendP(const uint8_t*buffer)
 		++i;
 	}
 	while(pgm_read_byte(buffer+i)!='\r');
-	digitalWrite(_ss_pin,HIGH);
+	digitalWrite(ss_pin,HIGH);
 	do
 	{
 		i=read_SC16IS(LSR)&0x20;	/*recycles i to obtain result*/
@@ -147,17 +146,17 @@ uint8_t SC16IS740::available()
 }
 void SC16IS740::write_SC16IS(uint8_t add,uint8_t val)
 {
-	digitalWrite(_ss_pin,LOW);
+	digitalWrite(ss_pin,LOW);
 	SPI.transfer(add);
 	SPI.transfer(val);
-	digitalWrite(_ss_pin,HIGH);
+	digitalWrite(ss_pin,HIGH);
 }
 uint8_t SC16IS740::read_SC16IS(uint8_t add)
 {
 	uint8_t data;
-	digitalWrite(_ss_pin,LOW);
+	digitalWrite(ss_pin,LOW);
 	SPI.transfer(add|0x80);
 	data=SPI.transfer(0);
-	digitalWrite(_ss_pin,HIGH);
+	digitalWrite(ss_pin,HIGH);
 	return data;
 }

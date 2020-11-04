@@ -2,17 +2,17 @@
 #define WEBCLIENT_H
 
 #include "Support/Modem/Modem.h"
-#include "Support/Persistence/Persistence.h"
+#include "Support/Persistence/FilePersistence.h"
 #include "Utilities/Print.h"
 
 class DreadClient {
 
     static bool send_packet;
-    Persistence * persistence;
+    FilePersistence * persistence;
     Modem * modem;
     Print * logger;
     public:
-    DreadClient(Persistence & persistence, Modem & modem, Print & logger);
+    DreadClient(FilePersistence & persistence, Modem & modem, Print & logger);
 
     static void CheckTime(void);
     void uploadFromPersistence(void);

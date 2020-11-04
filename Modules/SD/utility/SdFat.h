@@ -241,6 +241,11 @@ class SdFile : public Print {
     uint8_t b;
     return read(&b, 1) == 1 ? b : -1;
   }
+
+  int available(void) {
+    return  fileSize_ - curPosition_;
+  }
+
   int16_t read(void* buf, uint16_t nbyte);
   int8_t readDir(dir_t* dir);
   static uint8_t remove(SdFile* dirFile, const char* fileName);

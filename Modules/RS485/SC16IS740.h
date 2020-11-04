@@ -8,10 +8,10 @@
 
 #ifndef SC16IS740_H_
 #define SC16IS740_H_
-//#include <Arduino.h>
 #include "Utilities/DreadSystem.h"
-#include "Drivers/SoftwareSerial/SoftwareSerial.h"
+#include "Utilities/Print.h"
 #include <avr/pgmspace.h>
+
 //SC6IS740 Internal Registers //Note: all the registers are <<3
 //General register set
 #define RHR			0x00	//Read Original Reg: 0x00
@@ -51,11 +51,13 @@
 #define SC_12MHz		0x27
 #define SC_1_8432MHz	0x06
 
-class SC16IS740{
-	
+class SC16IS740
+{
+	uint8_t ss_pin;
+	Print * logger;	
 	public:
-	SC16IS740(const uint8_t select_pin/*,HardwareSerial&port*/,SoftwareSerial&port);
-	void init(const uint8_t xtal_freq);
+	SC16IS740(uint8_t const select_pin, Print & logger);
+	void init(uint8_t const xtal_freq);
 	void flush();
 	uint8_t read();
 	void send(const uint8_t*buffer,uint8_t length);
@@ -65,8 +67,6 @@ class SC16IS740{
 	uint8_t available();
 	void write_SC16IS(uint8_t add,uint8_t val);
 	uint8_t read_SC16IS(uint8_t add);
-	uint8_t _ss_pin;
-	////HardwareSerial*_port;	
-	SoftwareSerial*_port;	
-	};
+};
+
 #endif /* SC16IS740_H_ */

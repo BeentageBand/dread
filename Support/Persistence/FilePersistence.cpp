@@ -1,17 +1,17 @@
-#include "Persistence.h"
+#include "FilePersistence.h"
 #include "Drivers/SPI/SPI.h"
 #include "Modules/HID/HID.h"
 
 #define SD_SS 10
 
-Persistence::Persistence(File & file, uint8_t const * file_prefix, Print & logger)
+FilePersistence::FilePersistence(File & file, uint8_t const * file_prefix, Print & logger)
   : file(&file), file_name(), logger(&logger)
 {
   HID::get().setLed(ORG_GRN);
   memcpy(file_name, file_prefix, PERSISTENCE_FILENAME_SIZE);
 }
 
-void Persistence::writeRecord(uint32_t const record, uint8_t const * datetime, uint8_t const datetime_size)
+void FilePersistence::writeRecord(uint32_t const record, uint8_t const * datetime, uint8_t const datetime_size)
 {
   file->write((uint8_t*)file_name,3);
   file->write('\t');
@@ -38,7 +38,7 @@ void Persistence::writeRecord(uint32_t const record, uint8_t const * datetime, u
   logger->println();
 }
 
-bool Persistence::beginTransaction(uint8_t const transaction) {
+bool FilePersistence::beginTransaction(uint8_t const transaction) {
   SD.begin(SD_SS);
 
   uint8_t file_mode;
@@ -53,20 +53,20 @@ bool Persistence::beginTransaction(uint8_t const transaction) {
   return *file;
 }
 
-void Persistence::commitTransaction(void) {
+void FilePersistence::commitTransaction(void) {
   file->close();
 }
 
 
-char const * Persistence::getFilename(void) {
+char const * FilePersistence::getFilename(void) {
    return file_name;
 }
 
-uint32_t Persistence::getSize(void) {
+uint32_t FilePersistence::getSize(void) {
    return file->size();
 }
 
-bool Persistence::deprecateFilename(void)
+bool FilePersistence::deprecateFilename(void)
 {
    logger->write('R');               /*Write on debug "R*\r"*/
    logger->write('*');
@@ -100,7 +100,7 @@ bool Persistence::deprecateFilename(void)
    SPI.begin();
 }
 
-void Persistence::generateNextUID(void)
+void FilePersistence::generateNextUID(void)
 {
    uint8_t counter=7U;                     /*Pointer will go backwards.File_name only changes first 8 uint8_tacters [0-7]*/
    do

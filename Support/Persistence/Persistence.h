@@ -1,36 +1,23 @@
-#ifndef PERSISTENCE_H
-#define PERSISTENCE_H
+#ifndef PERSISTENCE_H_
+#define PERSISTENCE_H_
 
-#include "Modules/SD/SD.h"
 #include "Utilities/Print.h"
 
-#define PERSISTENCE_FILENAME_SIZE 13U
-
-enum Transaction {
+enum Transaction 
+{
   READ_TRANSACTION,
   WRITE_TRANSACTION
 };
 
-class Persistence
+class Persistence 
 {
-  File * file;
-  char file_name[PERSISTENCE_FILENAME_SIZE];
-  Print * logger;
-
   public:
-  Persistence(File & file, uint8_t const * file_prefix, Print & logger);
-  bool beginTransaction(uint8_t const transaction);
-  void commitTransaction(void);
-  void writeRecord(uint32_t const record, uint8_t const * datetime, uint8_t const datetime_size);
-  bool deprecateFilename(void);
+  virtual bool beginTransaction(uint8_t const transaction) = 0;
+  virtual void commitTransaction(void);
+  virtual void writeRecord(uint32_t const record, uint8_t const * datetime, uint8_t const datetime_size);
 
-  char const * getFilename(void);
-  uint32_t getSize(void);
-  inline Print & getReader(void) { return *file;}
-
-  private:
-  void generateNextUID(void);
+  virtual uint32_t getSize(void) = 0;
+  virtual Print & getReader(void) = 0;
 };
 
-
-#endif /*PERSISTENCE_H*/
+#endif /*PERSISTENCE_H_*/

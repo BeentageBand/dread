@@ -5,7 +5,7 @@
 
 bool DreadClient::send_packet = false;
 
-DreadClient::DreadClient(Persistence & persistence, Modem & modem, Print & logger)
+DreadClient::DreadClient(FilePersistence & persistence, Modem & modem, Print & logger)
 : persistence(&persistence), modem(&modem), logger(&logger) {}
 
 void DreadClient::CheckTime(void) {

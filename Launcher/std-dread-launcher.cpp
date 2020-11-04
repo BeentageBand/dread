@@ -11,7 +11,7 @@
 #include "Application/ConnectionHandler/ConnectionHandler.h"
 #include "Application/DreadClient/DreadClient.h"
 #include "Modules/HID/HID.h"
-#include "Support/Persistence/Persistence.h"
+#include "Support/Persistence/FilePersistence.h"
 #include "Support/Scheduler/Scheduler.h"
 #include "Support/Modem/Modem.h"
 //************************FLASH CONSTANTS*******************************//
@@ -35,7 +35,7 @@ static char CONFIG_file[]="config.txt";   /*config.txt*/
 static SoftwareSerial SoftSerial(DBG_RX,DBG_TX);
 //FAT
 static uint8_t upload_prefix[4] = "I1Z";
-static Persistence persistence(file, upload_prefix, SoftSerial);
+static FilePersistence persistence(file, upload_prefix, SoftSerial);
 //GSM
 static Sim900 gprs(Serial,SoftSerial);
 static Modem modem(file, gprs, SoftSerial);

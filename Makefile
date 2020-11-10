@@ -22,7 +22,7 @@ export CXXFLAGS=$(CFLAGS)
 
 SUBDIRS=Application Drivers Modules Support Utilities 
 
-BIN=std-dread-launcher
+BIN=std-dread-launcher slv-dread-launcher
 
 SRC=$(wildcard *.cpp)
 

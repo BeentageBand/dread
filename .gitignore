@@ -32,5 +32,6 @@
 *.app
 
 # Build Paths
+*.deps
 out
 std-dread-launcher

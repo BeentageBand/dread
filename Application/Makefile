@@ -1,5 +1,5 @@
 export PKG=app
-SUBDIRS=CardReader ConnectionHandler DreadClient
+SUBDIRS=CardReader ConnectionHandler DreadClient NetGateway
 
 .PHONY: all clean $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all)
 

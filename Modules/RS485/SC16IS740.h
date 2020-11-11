@@ -51,20 +51,19 @@
 #define SC_12MHz		0x27
 #define SC_1_8432MHz	0x06
 
-class SC16IS740
+class SC16IS740 : public Print
 {
 	uint8_t ss_pin;
-	Print * logger;	
 	public:
-	SC16IS740(uint8_t const select_pin, Print & logger);
+	SC16IS740(uint8_t const ss_pin);
 	void init(uint8_t const xtal_freq);
 	void flush();
-	uint8_t read();
-	void send(const uint8_t*buffer,uint8_t length);
-	void sendP(const uint8_t*buffer);
-	uint8_t matchResponse(uint8_t*response,const uint8_t first_char,const uint8_t last_char,const uint8_t response_size,uint8_t* res_ptr);
-	uint8_t processResponse(uint8_t*response,const uint8_t first_char,const uint8_t last_char,const uint8_t response_size,const uint16_t timeout);
-	uint8_t available();
+  int read(void);
+  void write(uint8_t c);
+  void write(uint8_t const * buffer, uint16_t size);
+  int available(void);
+
+  private:
 	void write_SC16IS(uint8_t add,uint8_t val);
 	uint8_t read_SC16IS(uint8_t add);
 };

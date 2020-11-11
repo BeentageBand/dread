@@ -49,12 +49,18 @@ union Response {
 
 class Router 
 {
-  RS485 * port;
+  Print * port;
   Print * logger;
   public:
-  Router(RS485 & port, Print & logger);
+  Router(Print & port, Print & logger);
   uint8_t registerService(uint8_t & address, uint32_t const timeout);
   uint8_t listenRequest(union Request & req, uint8_t address, uint32_t const timeout);
   void send(union Response & res);
+
+  private:
+  uint8_t processResponse(uint8_t * response, uint8_t const header, 
+      uint8_t const footer,
+      uint16_t const response_size,
+      uint32_t const timeout);
 };
 #endif /*ROUTER_H*/

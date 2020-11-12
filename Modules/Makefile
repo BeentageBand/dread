@@ -1,5 +1,5 @@
 export PKG=modules
-SUBDIRS=GPRS RFID RS485 SD HID
+SUBDIRS=GPRS Net RFID RS485 SD HID 
 
 .PHONY: all clean $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all)
 

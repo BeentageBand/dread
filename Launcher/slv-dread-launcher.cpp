@@ -27,7 +27,7 @@ MifareLite rfid(MFR_SS,MFR_NRST);
 static char mfr_book[REG_LIMIT];
 static NonPersistence persistence(SoftSerial, mfr_book, REG_LIMIT);
 //RS485
-static RS485 bus(SC_SS,Serial,SoftSerial);
+static RS485 bus(SC_SS,Serial);
 static Router router(bus, SoftSerial);
 //AAA:0!
 char const * server_name = "S9X";

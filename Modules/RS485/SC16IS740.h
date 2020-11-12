@@ -42,7 +42,7 @@
 #define XON2	0x05	//Read/Write *only when LCR is set to 1011 1111b (0xBF).
 #define XOFF1	0x06	//Read/Write *only when LCR is set to 1011 1111b (0xBF).
 #define XOFF2	0x07	//Read/Write *only when LCR is set to 1011 1111b (0xBF).
-//Driver handler
+//Driver handler 
 #define SC_12MHz		0x27
 #define SC_1_8432MHz	0x06
 

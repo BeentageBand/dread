@@ -29,7 +29,7 @@ class RS485 : public Print
   int read(void);
   void write(uint8_t c);
   void write(uint8_t const * buffer, uint16_t size);
-  int available(void) = 0;
+  int available(void);
 };
 
 #endif /* RS485_H_ */

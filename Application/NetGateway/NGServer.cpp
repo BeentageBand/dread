@@ -13,14 +13,14 @@ void NGServer::listen(void)
   logger->write(server_name);
   logger->write('\n');
 
-  uint8_t sc_result = router->registerService(address, 1000);
-  if (sc_result == ROUTER_NOT_REGISTERED || 
-      sc_result == ROUTER_TIMEOUT) return;
+  uint8_t rc = router->registerService(address, 1000);
+  if (rc == ROUTER_NOT_REGISTERED || 
+      rc == ROUTER_TIMEOUT) return;
 
-  sc_result = router->listenRequest(request, address, 1000);
-  //logger->println(sc_result,DEC);
-  if(sc_result == ROUTER_REQUEST_NOT_FOUND || 
-     sc_result == ROUTER_TIMEOUT)
+  rc = router->listenRequest(request, address, 1000);
+  //logger->println(rc,DEC);
+  if(rc == ROUTER_REQUEST_NOT_FOUND || 
+     rc == ROUTER_TIMEOUT)
   {
     HID::get().setLed(0);//TODO: net blink state
     return;

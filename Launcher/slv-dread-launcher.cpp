@@ -12,6 +12,7 @@
 #include "Application/NetGateway/NGServer.h"
 #include "Modules/HID/HID.h"
 #include "Modules/RS485/RS485.h"
+#include "Modules/Net/Socket.h"
 #include "Support/Persistence/NonPersistence.h"
 #include "Support/Scheduler/Scheduler.h"
 #include "Support/Router/Router.h"
@@ -28,7 +29,8 @@ static char mfr_book[REG_LIMIT];
 static NonPersistence persistence(SoftSerial, mfr_book, REG_LIMIT);
 //RS485
 static RS485 bus(SC_SS,Serial);
-static Router router(bus, SoftSerial);
+static Socket socket(bus, SoftSerial);
+static Router router(socket, SoftSerial);
 //AAA:0!
 char const * server_name = "S9X";
 

@@ -35,3 +35,7 @@ uint8_t Router::listenRequest(union Request & req, uint8_t address, uint32_t con
 
   return rc;
 }
+void Router::send(union Response & res)
+{
+  socket->send(res);
+}

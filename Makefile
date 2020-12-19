@@ -23,25 +23,28 @@ export CXXFLAGS=$(CFLAGS)
 SUBDIRS=Application Drivers Modules Support Utilities 
 
 BIN=std-dread-launcher slv-dread-launcher
+TESTBIN=unittests
 
 SRC=$(wildcard *.cpp)
 
-.PHONY: all $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all)  Launcher-all Launcher-clean
+.PHONY: all $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all) Launcher-all Launcher-clean UnitTests-all UnitTests-clean
 
-all: $(SUBDIRS:%=%-all) $(BIN:%=$(INSTALL_DIR)/bin/%) 
+all: $(SUBDIRS:%=%-all) $(BIN:%=$(INSTALL_DIR)/bin/%) $(TESTBIN:%=$(INSTALL_DIR)/bin/%) 
 
-clean: $(SUBDIRS:%=%-clean) Launcher-clean
+clean: $(SUBDIRS:%=%-clean) Launcher-clean UnitTests-clean
 	rm -f *.[oa];
 	
 $(BIN:%=$(INSTALL_DIR)/bin/%) : $(INSTALL_DIR)/bin Launcher-all 
 
+$(TESTBIN:%=$(INSTALL_DIR)/bin/%) : $(INSTALL_DIR)/bin UnitTests-all 
+
 clobber : clean
 	-rm -rf $(INSTALL_DIR);
 
-$(SUBDIRS:%=%-all) Launcher-all : $(INSTALL_DIR)/lib $(INSTALL_DIR)/include
+$(SUBDIRS:%=%-all) Launcher-all UnitTests-all : $(INSTALL_DIR)/lib $(INSTALL_DIR)/include
 	make all -C $(@:%-all=%);
 
-$(SUBDIRS:%=%-clean) Launcher-clean:
+$(SUBDIRS:%=%-clean) Launcher-clean UnitTests-clean:
 	make clean -C $(@:%-clean=%);
 
 $(INSTALL_DIR) $(INSTALL_DIR)/lib $(INSTALL_DIR)/bin $(INSTALL_DIR)/include : 

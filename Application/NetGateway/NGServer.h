@@ -1,8 +1,8 @@
 #ifndef NG_SERVER_H
 #define NG_SERVER_H
-#include "Support/Router/Router.h"
-#include "Utilities/Print.h"
-#include "Support/Persistence/Persistence.h"
+#include "Router.h"
+#include "Print.h"
+#include "Persistence.h"
 
 class NGServer
 {

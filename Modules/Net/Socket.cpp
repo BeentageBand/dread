@@ -1,6 +1,6 @@
 #include <string.h>
 #include "Socket.h"
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 
 Socket::Socket(Print & port, Print & logger)
   : port(&port), logger(&logger)

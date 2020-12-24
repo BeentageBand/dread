@@ -24,7 +24,7 @@
  * Useful utility functions.
  */
 //#warning #include "../../../Utilities/DreadSystem.h" instead of #include <Arduino.h>
-#include "../../../Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 
 #ifdef __AVR__
 #include <avr/pgmspace.h>

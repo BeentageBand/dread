@@ -26,7 +26,6 @@
 #include "SC16IS740.h"
 #include "FilePersistence.h"
 #include "Scheduler.h"
-#include "Modem.h"
 
 //************************GLOBAL VARIABLES******************************//
 //////////////////////////////////////////////////////////////////////////

@@ -31,20 +31,13 @@
 //////////////////////////////////////////////////////////////////////////
 //Atmega328P
 #include "DreadSystem.h"
-//Interrupts
-#include "MsTimer2.h"
 //FAT
 #include "SPI.h"
-#include "SD.h"
 #include "Persistence.h"
 //Debug
 #include "SoftwareSerial.h"
 //GSM
-#include <avr/pgmspace.h>
-#include "Sim900.h"
-////RFID
-#include "MifareLite.h"
-//RS485
+#include "DreadConfig.h"
 //~~~~
 //HID
 //~~~~

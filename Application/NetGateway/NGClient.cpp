@@ -1,6 +1,6 @@
 #include "NGClient.h"
-#include "Support/Util/Locale.h"
-#include "Utilities/DreadSystem.h"
+#include "Locale.h"
+#include "DreadSystem.h"
 
 NGClient::NGClient(char const * client_name, Socket & socket, NetManager & net_manager, 
       Persistence & persistence,

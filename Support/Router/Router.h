@@ -1,8 +1,8 @@
 #ifndef ROUTER_H
 #define ROUTER_H
-#include "Utilities/Print.h"
-#include "Modules/Net/Socket.h"
-#include "Modules/RS485/RS485.h"
+#include "Print.h"
+#include "Socket.h"
+#include "RS485.h"
 
 
 

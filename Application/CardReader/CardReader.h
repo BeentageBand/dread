@@ -2,7 +2,6 @@
 #define CARD_READER_H
 
 #include "MifareLite.h"
-#include "SD.h"
 #include "Persistence.h"
 #include "Print.h"
 

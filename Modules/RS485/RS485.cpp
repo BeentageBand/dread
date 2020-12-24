@@ -5,7 +5,7 @@
  *  Author: nedera03
  */ 
 #include "RS485.h"
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 
 RS485::RS485(uint8_t const write_pin, Print & port)
   : write_pin(write_pin), port(&port)

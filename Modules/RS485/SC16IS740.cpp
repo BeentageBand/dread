@@ -5,8 +5,8 @@
  *  Author: nedera03
  */ 
 #include "SC16IS740.h"
-#include "Drivers/SPI/SPI.h"
-#include "Utilities/DreadSystem.h"
+#include "SPI.h"
+#include "DreadSystem.h"
 
 SC16IS740::SC16IS740(uint8_t const ss_pin)
   : ss_pin(ss_pin) 

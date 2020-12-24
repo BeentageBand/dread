@@ -1,10 +1,10 @@
 #ifndef NG_CLIENT_H
 #define NG_CLIENT_H
 
-#include "Modules/Net/NetManager.h"
-#include "Modules/Net/Socket.h"
-#include "Support/Persistence/Persistence.h"
-#include "Utilities/Print.h"
+#include "NetManager.h"
+#include "Socket.h"
+#include "Persistence.h"
+#include "Print.h"
 
 class NGClient {
 

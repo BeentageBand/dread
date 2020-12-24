@@ -1,5 +1,5 @@
 #include "NGServer.h"
-#include "Modules/HID/HID.h"
+#include "HID.h"
 
 NGServer::NGServer(char const * server_name, Router & router, Persistence & persistence, Print & logger)
   : address(NO_ADDRESS), server_name(server_name), router(&router), persistence(&persistence), logger(&logger)

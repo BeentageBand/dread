@@ -9,8 +9,8 @@
 #define RS485_H_
 
 
-#include "Utilities/Print.h"
-#include <avr/pgmspace.h>
+#include "Print.h"
+#include "DreadConfig.h"
 
 enum SC_Status {
   SC_RESPOND_RECEIVED	=	0,

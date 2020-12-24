@@ -2,7 +2,7 @@
 #define SOCKET_H
 
 #include "Types.h"
-#include "Utilities/Print.h"
+#include "Print.h"
 
 enum SocketCodes {
   SOCKET_MSG_RECEIVED = 0,

@@ -12,7 +12,7 @@
 //******************************LIBRARIES****************************//
 //#include <Arduino.h>
 #include "DreadSystem.h"
-#include <avr/pgmspace.h>
+#include "DreadConfig.h"
 #include "SoftwareSerial.h"
 //*****************************DEFINITIONS***************************//
 #define AT_READ  '?'

@@ -9,17 +9,7 @@
 #ifndef DREADSYSTEM_H_
 #define DREADSYSTEM_H_
 
-#define F_CPU 8000000L				/*Dread operates at 8MHz*/
-
-#include <stdlib.h>
-#include <string.h>
-
-#include <stdio.h>
-#include <stdarg.h>
-#include <avr/pgmspace.h>
-#include <avr/io.h>					/*include io SFR definitions */
-#include <avr/interrupt.h>
-
+#include "DreadConfig.h"
 
 #ifdef __cplusplus
 extern "C"{

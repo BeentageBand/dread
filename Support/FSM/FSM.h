@@ -2,8 +2,7 @@
 #define FSM_H
 
 #include "FSMState.h"
-
-#include <avr/pgmspace.h>
+#include "DreadConfig.h"
 
 namespace fsm {
 

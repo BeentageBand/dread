@@ -8,9 +8,9 @@
 
 #ifndef SC16IS740_H_
 #define SC16IS740_H_
-#include "Utilities/DreadSystem.h"
-#include "Utilities/Print.h"
-#include <avr/pgmspace.h>
+#include "DreadSystem.h"
+#include "Print.h"
+#include "DreadConfig.h"
 
 //SC6IS740 Internal Registers //Note: all the registers are <<3
 //General register set

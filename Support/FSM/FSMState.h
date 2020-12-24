@@ -1,9 +1,8 @@
 #ifndef FSM_STATE_H
 #define FSM_STATE_H
 
-#include <stdint.h>
 
-#include <avr/pgmspace.h>
+#include "DreadConfig.h"
 
 #define NO_STATE 255U
 

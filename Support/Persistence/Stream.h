@@ -1,6 +1,6 @@
 #ifndef STREAM_H
 #define STREAM_H
-#include "Utilities/Print.h"
+#include "Print.h"
 
 class Stream : public Print
 {

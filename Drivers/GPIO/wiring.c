@@ -5,7 +5,7 @@
  *  Author: nedera03
  */ 
 #define ARDUINO_MAIN
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 #include "Pinout.h"
 
 void pinMode(uint8_t pin, uint8_t mode)

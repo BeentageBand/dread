@@ -215,7 +215,7 @@ extern "C"{
 
 #ifdef __cplusplus
 
-#include "Drivers/HardwareSerial/HardwareSerial.h"
+#include "HardwareSerial.h"
 
 #if defined(HAVE_HWSERIAL0) && defined(HAVE_CDCSERIAL)
 #error "Targets with both UART0 and CDC serial not supported"
@@ -239,6 +239,6 @@ long map(long, long, long, long, long);
 
 #endif
 
-#include "Drivers/GPIO/Pinout.h"
+#include "Pinout.h"
 
 #endif /* DREADSYSTEM_H_ */

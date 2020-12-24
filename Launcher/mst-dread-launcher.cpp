@@ -17,16 +17,16 @@
 //***************************LIBRARIES**********************************//
 //////////////////////////////////////////////////////////////////////////
 #include "Dread.h"
-#include "Application/ConnectionHandler/ConnectionHandler.h"
-#include "Application/DreadClient/DreadClient.h"
-#include "Application/NetGateway/NGClient.h"
-#include "Modules/HID/HID.h"
-#include "Modules/Net/NetManager.h"
-#include "Modules/Net/Socket.h"
-#include "Modules/RS485/SC16IS740.h"
-#include "Support/Persistence/FilePersistence.h"
-#include "Support/Scheduler/Scheduler.h"
-#include "Support/Modem/Modem.h"
+#include "ConnectionHandler.h"
+#include "DreadClient.h"
+#include "NGClient.h"
+#include "HID.h"
+#include "NetManager.h"
+#include "Socket.h"
+#include "SC16IS740.h"
+#include "FilePersistence.h"
+#include "Scheduler.h"
+#include "Modem.h"
 
 //************************GLOBAL VARIABLES******************************//
 //////////////////////////////////////////////////////////////////////////

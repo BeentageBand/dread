@@ -7,13 +7,13 @@
 //***************************LIBRARIES**********************************//
 //////////////////////////////////////////////////////////////////////////
 #include "Dread.h"
-#include "Application/CardReader/CardReader.h"
-#include "Application/ConnectionHandler/ConnectionHandler.h"
-#include "Application/DreadClient/DreadClient.h"
-#include "Modules/HID/HID.h"
-#include "Support/Persistence/FilePersistence.h"
-#include "Support/Scheduler/Scheduler.h"
-#include "Support/Modem/Modem.h"
+#include "CardReader.h"
+#include "ConnectionHandler.h"
+#include "DreadClient.h"
+#include "HID.h"
+#include "FilePersistence.h"
+#include "Scheduler.h"
+#include "Modem.h"
 //************************FLASH CONSTANTS*******************************//
 //////////////////////////////////////////////////////////////////////////
 /*

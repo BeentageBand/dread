@@ -1,7 +1,7 @@
 #ifndef HID_H
 #define HID_H
 
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 
 enum LedState
 {

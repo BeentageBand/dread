@@ -27,7 +27,7 @@
 #include <string.h>
 #include <inttypes.h>
 
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 #include "HardwareSerial.h"
 #include "HardwareSerial_private.h"
 

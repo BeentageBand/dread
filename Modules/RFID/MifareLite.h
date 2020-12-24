@@ -9,7 +9,7 @@
 #ifndef MIFARELITE_H_
 #define MIFARELITE_H_
 
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 
 //MF522 command bits
 #define PCD_IDLE              0x00               //NO action; cancel current commands

@@ -2,8 +2,8 @@
 #define FILE_PERSISTENCE_H
 
 #include "Persistence.h"
-#include "Modules/SD/SD.h"
-#include "Utilities/Print.h"
+#include "SD.h"
+#include "Print.h"
 
 #define PERSISTENCE_FILENAME_SIZE 13U
 

@@ -1,6 +1,6 @@
 #include "DreadClient.h"
-#include "Support/Util/Locale.h"
-#include "Modules/HID/HID.h"
+#include "Locale.h"
+#include "HID.h"
 #include <stdbool.h>
 
 bool DreadClient::send_packet = false;

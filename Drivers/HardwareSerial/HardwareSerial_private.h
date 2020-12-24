@@ -21,7 +21,7 @@
   Modified 14 August 2012 by Alarus
 */
 
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 
 // this next line disables the entire HardwareSerial.cpp, 
 // this is so I can support Attiny series and any other chip without a uart

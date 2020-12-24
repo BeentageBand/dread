@@ -1,52 +1,23 @@
-export AR=avr-ar
-export CXX=avr-g++
-export CC=avr-gcc
-export BUILD_DIR=$(realpath .)
-export INSTALL_DIR=$(BUILD_DIR)/out
-export CFLAGS=\
-	-funsigned-bitfields                                                  \
-	-fdata-sections                                                       \
-	-fpack-struct                                                         \
-	-fshort-enums                                                         \
-	-g2                                                                   \
-	-Wall                                                                 \
-	-mmcu=atmega328p                                                      \
-	-Os                                                                   \
-	-ffunction-sections                                                   \
-	-DF_CPU=8000000L                                                      \
-	-fno-threadsafe-statics                                               \
-	-I $(INSTALL_DIR)/include                                             \
-	-I $(INSTALL_DIR)/..                                                  \
+PROJ_DIR=$(realpath .)
+PROJ_MAK_DIR=$(PROJ_DIR)/build
 
-export CXXFLAGS=$(CFLAGS)
+define Project_Make
 
-SUBDIRS=Application Drivers Modules Support Utilities 
+FLAVOR_LIST=std
+#Flavor
+std_build=avr
+host_build=linux
+avr_MCU=atmega328p
 
-BIN=std-dread-launcher slv-dread-launcher
-TESTBIN=unittests
+std_PROJ_INC+=\
+include/avr/config.h
 
-SRC=$(wildcard *.cpp)
+host_PROJ_INC+=\
+include/host/config.h \
+$(shell pkg-config --cflags gmock_main gtest gmock)
 
-.PHONY: all $(SUBDIRS:%=%-clean) $(SUBDIRS:%=%-all) Launcher-all Launcher-clean UnitTests-all UnitTests-clean
+$(host_build)_PROJ_LIBS=$(shell pkg-config --libs --static gmock_main gtest gmock)
 
-all: $(SUBDIRS:%=%-all) $(BIN:%=$(INSTALL_DIR)/bin/%) $(TESTBIN:%=$(INSTALL_DIR)/bin/%) 
+endef
 
-clean: $(SUBDIRS:%=%-clean) Launcher-clean UnitTests-clean
-	rm -f *.[oa];
-	
-$(BIN:%=$(INSTALL_DIR)/bin/%) : $(INSTALL_DIR)/bin Launcher-all 
-
-$(TESTBIN:%=$(INSTALL_DIR)/bin/%) : $(INSTALL_DIR)/bin UnitTests-all 
-
-clobber : clean
-	-rm -rf $(INSTALL_DIR);
-
-$(SUBDIRS:%=%-all) Launcher-all UnitTests-all : $(INSTALL_DIR)/lib $(INSTALL_DIR)/include
-	make all -C $(@:%-all=%);
-
-$(SUBDIRS:%=%-clean) Launcher-clean UnitTests-clean:
-	make clean -C $(@:%-clean=%);
-
-$(INSTALL_DIR) $(INSTALL_DIR)/lib $(INSTALL_DIR)/bin $(INSTALL_DIR)/include : 
-	-mkdir -p $@;
-
+include $(PROJ_MAK_DIR)/project.mk

@@ -1,9 +1,9 @@
 #ifndef MODEM_H
 #define MODEM_H
 
-#include "Modules/GPRS/Sim900.h"
-#include "Modules/SD/SD.h"
-#include "Utilities/Print.h"
+#include "Sim900.h"
+#include "SD.h"
+#include "Print.h"
 
 #define GSM_NPWD  5
 #define GSM_RST   4

@@ -33,7 +33,7 @@ http://arduiniana.org.
 #define SoftwareSerial_h
 
 #include <inttypes.h>
-#include "Utilities/Print.h"
+#include "Print.h"
 /******************************************************************************
 * Definitions
 ******************************************************************************/

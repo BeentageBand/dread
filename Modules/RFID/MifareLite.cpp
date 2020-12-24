@@ -7,7 +7,7 @@
 
 #include "MifareLite.h"
 
-#include "Drivers/SPI/SPI.h"
+#include "SPI.h"
 
 #define MAX_LEN 16
 

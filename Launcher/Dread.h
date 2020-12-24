@@ -30,20 +30,20 @@
 //***************************LIBRARIES**********************************//
 //////////////////////////////////////////////////////////////////////////
 //Atmega328P
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 //Interrupts
-#include "Drivers/Timers/MsTimer2.h"
+#include "MsTimer2.h"
 //FAT
-#include "Drivers/SPI/SPI.h"
-#include "Modules/SD/SD.h"
-#include "Support/Persistence/Persistence.h"
+#include "SPI.h"
+#include "SD.h"
+#include "Persistence.h"
 //Debug
-#include "Drivers/SoftwareSerial/SoftwareSerial.h"
+#include "SoftwareSerial.h"
 //GSM
 #include <avr/pgmspace.h>
-#include "Modules/GPRS/Sim900.h"
+#include "Sim900.h"
 ////RFID
-#include "Modules/RFID/MifareLite.h"
+#include "MifareLite.h"
 //RS485
 //~~~~
 //HID

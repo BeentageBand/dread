@@ -12,7 +12,7 @@
 #define _SPI_H_INCLUDED
 
 #include <stdio.h>
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 #include <avr/pgmspace.h>
 
 #define SPI_CLOCK_DIV4 0x00

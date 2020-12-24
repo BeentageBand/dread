@@ -11,9 +11,9 @@
 #define SIM900_H_
 //******************************LIBRARIES****************************//
 //#include <Arduino.h>
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 #include <avr/pgmspace.h>
-#include "Drivers/SoftwareSerial/SoftwareSerial.h"
+#include "SoftwareSerial.h"
 //*****************************DEFINITIONS***************************//
 #define AT_READ  '?'
 #define AT_WRITE '='

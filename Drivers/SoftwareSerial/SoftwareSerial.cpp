@@ -40,7 +40,7 @@ http://arduiniana.org.
 // 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
-#include "Utilities/DreadSystem.h"
+#include "DreadSystem.h"
 #include "SoftwareSerial.h"
 //
 // Lookup table

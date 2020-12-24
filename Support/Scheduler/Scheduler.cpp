@@ -1,5 +1,5 @@
 #include "Scheduler.h"
-#include "Drivers/Timers/MsTimer2.h"
+#include "MsTimer2.h"
 #include <stdlib.h>
 
 #define INT_PERIOD	(200U)		//Defines interrupt period

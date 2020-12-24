@@ -1,9 +1,9 @@
 #ifndef WEBCLIENT_H
 #define WEBCLIENT_H
 
-#include "Support/Modem/Modem.h"
-#include "Support/Persistence/FilePersistence.h"
-#include "Utilities/Print.h"
+#include "Modem.h"
+#include "FilePersistence.h"
+#include "Print.h"
 
 class DreadClient {
 

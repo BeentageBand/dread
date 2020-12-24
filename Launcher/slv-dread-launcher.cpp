@@ -8,14 +8,14 @@
 //////////////////////////////////////////////////////////////////////////
 ///////////**********************LIBRARIES**********************//////////
 #include "Dread.h"
-#include "Application/CardReader/CardReader.h"
-#include "Application/NetGateway/NGServer.h"
-#include "Modules/HID/HID.h"
-#include "Modules/RS485/RS485.h"
-#include "Modules/Net/Socket.h"
-#include "Support/Persistence/NonPersistence.h"
-#include "Support/Scheduler/Scheduler.h"
-#include "Support/Router/Router.h"
+#include "CardReader.h"
+#include "NGServer.h"
+#include "HID.h"
+#include "RS485.h"
+#include "Socket.h"
+#include "NonPersistence.h"
+#include "Scheduler.h"
+#include "Router.h"
 //////////////////////////////////////////////////////////////////////////
 ///////***********************GlobalVARIABLES**********************///////
 

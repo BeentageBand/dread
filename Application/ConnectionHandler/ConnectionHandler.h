@@ -1,9 +1,9 @@
 #ifndef CONNECTION_HANDLER_H
 #define CONNECTION_HANDLER_H
 
-#include "Support/FSM/FSM.h"
-#include "Support/Modem/Modem.h"
-#include "Utilities/Print.h"
+#include "FSM.h"
+#include "Modem.h"
+#include "Print.h"
 
 class ConnectionHandler : public fsm::Machine {
 

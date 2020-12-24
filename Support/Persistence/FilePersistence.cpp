@@ -1,6 +1,6 @@
 #include "FilePersistence.h"
-#include "Drivers/SPI/SPI.h"
-#include "Modules/HID/HID.h"
+#include "SPI.h"
+#include "HID.h"
 
 #define SD_SS 10
 

@@ -5,7 +5,6 @@ host_$(_feat_)_inc=
 host_$(_feat_)_bin_objs=SchedulerTests
 
 host_$(_feat_)_bin_libs=  \
-	scheduler \
 
 host_$(_feat_)_bin=unit-tests
 

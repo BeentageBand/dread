@@ -92,9 +92,10 @@ host_SUBDIRS=\
 Support/Scheduler \
 UnitTests
 
+
 define Project_Make
 
-FLAVOR_LIST=std slv mst
+FLAVOR_LIST=std slv mst host
 #Flavor
 
 endef

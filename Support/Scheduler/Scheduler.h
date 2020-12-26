@@ -14,14 +14,15 @@ class Scheduler
     Subscription * next;
   };
 
+  enum {INT_PERIOD = 200U};
+
   private:
   Subscription * subscriptions;
   uint16_t tick;
 
+  Scheduler(void);
   public:
-  explicit Scheduler(uint16_t const period_ms);
 
-  static Scheduler & get(uint32_t const period_ms);
   static Scheduler & get(void);
   static void CheckTime(void);
 

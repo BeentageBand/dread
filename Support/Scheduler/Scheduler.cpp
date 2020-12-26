@@ -1,29 +1,19 @@
 #include "Scheduler.h"
-#include "MsTimer2.h"
 #include <stdlib.h>
-
-#define INT_PERIOD	(200U)		//Defines interrupt period
 
 Scheduler::Subscription::Subscription(void (*subscription)(void), uint16_t const timeout)
 : subscription(subscription), timeout(timeout), next(NULL)
 {}
 
-Scheduler::Scheduler(uint16_t const period_ms)
+Scheduler::Scheduler(void)
   :subscriptions(NULL), tick(0)
 {
-   MsTimer2::set(period_ms,Scheduler::CheckTime);
-   MsTimer2::start();
-}
-
-Scheduler & Scheduler::get(uint32_t const period_ms)
-{
-  static Scheduler scheduler(period_ms);
-  return scheduler;
 }
 
 Scheduler & Scheduler::get(void)
 {
-  return Scheduler::get(INT_PERIOD);
+  static Scheduler scheduler;
+  return scheduler;
 }
 
 void Scheduler::CheckTime(void)
@@ -37,7 +27,7 @@ void Scheduler::callSubscriptions(void)
   ++tick;
   Scheduler::Subscription * it = subscriptions;
 
-  while (NULL == it->next)
+  while (NULL != it)
   {
     if(0 == (tick %  it->timeout))
     {
@@ -49,13 +39,15 @@ void Scheduler::callSubscriptions(void)
 
 void Scheduler::subscribe(Scheduler::Subscription * const subscription)
 {
-  Scheduler::Subscription * it = subscriptions;
 
-  if (NULL == it)
+  if (NULL == subscriptions)
   {
     subscriptions = subscription;
     subscription->next = NULL;
+    return;
   }
+
+  Scheduler::Subscription * it = subscriptions;
 
   while (NULL != it->next)
   {
@@ -68,15 +60,18 @@ void Scheduler::subscribe(Scheduler::Subscription * const subscription)
 
 void Scheduler::unsubscribe(Scheduler::Subscription * const subscription)
 {
-  Scheduler::Subscription * it = subscriptions;
-  if (NULL == it) return;
-  while (NULL != it->next)
-  {
-    if (NULL != it->next && it->next->subscription == subscription->subscription)
-    {
-      Scheduler::Subscription * next = it->next->next;
-      it->next = next;
+  if (NULL == subscriptions) return;
+
+  Scheduler::Subscription prev(NULL, 0);
+  prev.next = subscriptions;
+
+  Scheduler::Subscription * it = &prev;
+  while(NULL != it->next) {
+    if (it->next == subscription) {
+      it->next = it->next->next;
+    } else {
+      it = it->next;
     }
-    it = it->next;
   }
+  subscriptions = prev.next;
 }

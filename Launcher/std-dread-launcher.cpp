@@ -14,6 +14,7 @@
 #include "FilePersistence.h"
 #include "Scheduler.h"
 #include "Modem.h"
+#include "MsTimer2.h"
 //************************FLASH CONSTANTS*******************************//
 //////////////////////////////////////////////////////////////////////////
 /*
@@ -51,6 +52,11 @@ static DreadClient dread_client(persistence, modem, SoftSerial);
 static Scheduler::Subscription hid_subscription(HID::CheckTime, INT_SEC);
 static Scheduler::Subscription connection_subscription(DreadClient::CheckTime, 5 * INT_MINUTES);
 
+
+void ConfigMsTimer2(void) {
+  MsTimer2::set(Scheduler::INT_PERIOD, Scheduler::CheckTime);
+  MsTimer2::start();
+}
 ////SETUP
 //** Function: ConfigSD()
 /* Description:
@@ -149,30 +155,30 @@ inline void ConfigGPRS()
 
 void setup()
 {
-
   Scheduler::get().subscribe(&hid_subscription);
   Scheduler::get().subscribe(&connection_subscription);
 
-   //Init Serials GPRS and debug
-   gprs.begin(GSM_BAUD,GSM_RST,GSM_NPWD);
-   //ConfigHID
-   ConfigHID();
-   //SD
-   pinMode(SC_SS,OUTPUT);
-   ConfigSD();
-   //GSM
-   ConfigGPRS();
-   SPI.end();
-   delay(1000);
-   SPI.begin();
-   rfid.Init();
-   //Set last serial to 0's
+  //Init Serials GPRS and debug
+  gprs.begin(GSM_BAUD,GSM_RST,GSM_NPWD);
+  //ConfigHID
+  ConfigHID();
+  ConfigMsTimer2();
+  //SD
+  pinMode(SC_SS,OUTPUT);
+  ConfigSD();
+  //GSM
+  ConfigGPRS();
+  SPI.end();
+  delay(1000);
+  SPI.begin();
+  rfid.Init();
+  //Set last serial to 0's
 
-   SoftSerial.write('R');            /*Print "RFID"*/
-   SoftSerial.write('F');
-   SoftSerial.write('I');
-   SoftSerial.write('D');
-   SoftSerial.println();
+  SoftSerial.write('R');            /*Print "RFID"*/
+  SoftSerial.write('F');
+  SoftSerial.write('I');
+  SoftSerial.write('D');
+  SoftSerial.println();
 }
 void loop()
 {

@@ -39,6 +39,7 @@ Modules/RFID                   \
 Modules/SD                     \
 Support/FSM                    \
 Support/Modem                  \
+Support/FilePersistence        \
 Support/Persistence            \
 Support/Scheduler              \
 Support/Util                   \
@@ -82,6 +83,7 @@ Modules/RS485                  \
 Modules/SD                     \
 Support/FSM                    \
 Support/Modem                  \
+Support/FilePersistence        \
 Support/Persistence            \
 Support/Scheduler              \
 Support/Router                 \

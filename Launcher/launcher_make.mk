@@ -18,6 +18,7 @@ std_$(_feat_)_bin_libs=  \
 	hardwareserial             \
 	fsm                        \
 	modem                      \
+	filepersistence            \
 	persistence                \
 	rfid                       \
 	scheduler                  \
@@ -57,6 +58,7 @@ mst_$(_feat_)_bin_libs=  \
 	modem                      \
 	net                        \
 	netgateway                 \
+	filepersistence            \
 	persistence                \
 	router                     \
 	rs485                      \

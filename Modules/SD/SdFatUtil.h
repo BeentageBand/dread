@@ -25,6 +25,7 @@
  */
 //#warning #include "../../../Utilities/DreadSystem.h" instead of #include <Arduino.h>
 #include "DreadSystem.h"
+#include "HardwareSerial.h"
 
 #ifdef __AVR__
 #include <avr/pgmspace.h>

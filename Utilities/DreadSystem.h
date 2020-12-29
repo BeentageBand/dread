@@ -205,12 +205,6 @@ extern "C"{
 
 #ifdef __cplusplus
 
-#include "HardwareSerial.h"
-
-#if defined(HAVE_HWSERIAL0) && defined(HAVE_CDCSERIAL)
-#error "Targets with both UART0 and CDC serial not supported"
-#endif
-
 uint16_t makeWord(uint16_t w);
 uint16_t makeWord(byte h, byte l);
 

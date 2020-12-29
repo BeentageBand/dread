@@ -27,6 +27,10 @@
 #include <inttypes.h>
 #include "Print.h"
 
+#if defined(HAVE_HWSERIAL0) && defined(HAVE_CDCSERIAL)
+#error "Targets with both UART0 and CDC serial not supported"
+#endif
+
 // Define constants and variables for buffering incoming serial data.  We're
 // using a ring buffer (I think), in which head is the index of the location
 // to which to write the next incoming character and tail is the index of the

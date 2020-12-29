@@ -81,7 +81,7 @@ static const uint8_t A7 = 21;
 // 22-29 PH0-PH7 works
 // 30-35 PG5-PG0 works
 // 36-43 PC7-PC0 works
-// 44-51 PJ7-PJ0 works
+// 44-51 PJ7-PJ0 workjks
 // 52-59 PL7-PL0 works
 // 60-67 PD7-PD0 works
 // A0-A7 PF0-PF7

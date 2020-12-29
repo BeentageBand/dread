@@ -1,7 +1,6 @@
 #include "NetManager.h"
 #include <string.h>
 
-
 NetManager::NetManager(void)
 {
   memset(table, 0, sizeof(table));
@@ -71,7 +70,7 @@ uint8_t NetManager::addAddress(uint8_t address)
     else break;
   } while (probe < MAX_ADDRESSES);
 
-  free_addresses++;
+  free_addresses--;
   table[h] = address;
   return true;
 }

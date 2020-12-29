@@ -10,6 +10,7 @@
 #include "Dread.h"
 #include "CardReader.h"
 #include "NGServer.h"
+#include "HardwareSerial.h"
 #include "HID.h"
 #include "RS485.h"
 #include "Socket.h"

@@ -88,8 +88,10 @@ Support/Router                 \
 Support/Util                   \
 Utilities
 
-host_SUBDIRS=\
+host_SUBDIRS=     \
+Modules/Net       \
 Support/Scheduler \
+Utilities         \
 UnitTests
 
 

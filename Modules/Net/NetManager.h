@@ -4,12 +4,12 @@
 #include <stdint.h>
 
 #define MAX_ADDRESSES (16u)
-class NetManager
-{
+class NetManager {
   uint8_t table[MAX_ADDRESSES];
   uint8_t free_addresses;
   uint8_t idx;
-  public:
+
+public:
   NetManager(void);
   int availableAddresses(void);
   bool contains(uint8_t address);

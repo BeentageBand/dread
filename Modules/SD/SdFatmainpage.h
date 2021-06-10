@@ -1,13 +1,13 @@
 /* Arduino SdFat Library
  * Copyright (C) 2009 by William Greiman
- *  
+ *
  * This file is part of the Arduino SdFat Library
- *  
- * This Library is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
+ *
+ * This Library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This Library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -70,7 +70,7 @@ limited RAM.
 \section Hardware Hardware Configuration
 
 SdFat was developed using an
-<A HREF = "http://www.adafruit.com/"> Adafruit Industries</A> 
+<A HREF = "http://www.adafruit.com/"> Adafruit Industries</A>
 <A HREF = "http://www.ladyada.net/make/waveshield/"> Wave Shield</A>.
 
 The hardware interface to the SD card should not use a resistor based level
@@ -84,12 +84,13 @@ uses a 74AHC125N.  Gravitech sells SD and MicroSD Card Adapters based on the
 74LCX245.
 
 If you are using a resistor based level shifter and are having problems try
-setting the SPI bus frequency to 4 MHz.  This can be done by using 
+setting the SPI bus frequency to 4 MHz.  This can be done by using
 card.init(SPI_HALF_SPEED) to initialize the SD card.
 
 \section comment Bugs and Comments
 
-If you wish to report bugs or have comments, send email to fat16lib@sbcglobal.net.
+If you wish to report bugs or have comments, send email to
+fat16lib@sbcglobal.net.
 
 \section SdFatClass SdFat Usage
 
@@ -109,15 +110,15 @@ value is lost.
 
 \note
   The Arduino Print class uses character
-at a time writes so it was necessary to use a \link SdFile::sync() sync() \endlink
-function to control when data is written to the SD card.
+at a time writes so it was necessary to use a \link SdFile::sync() sync()
+\endlink function to control when data is written to the SD card.
 
 \par
-An application which writes to a file using \link Print::print() print()\endlink,
-\link Print::println() println() \endlink
-or \link SdFile::write write() \endlink must call \link SdFile::sync() sync() \endlink
-at the appropriate time to force data and directory information to be written
-to the SD Card.  Data and directory information are also written to the SD card
+An application which writes to a file using \link Print::print()
+print()\endlink, \link Print::println() println() \endlink or \link
+SdFile::write write() \endlink must call \link SdFile::sync() sync() \endlink at
+the appropriate time to force data and directory information to be written to
+the SD Card.  Data and directory information are also written to the SD card
 when \link SdFile::close() close() \endlink is called.
 
 \par
@@ -197,6 +198,6 @@ http://www.sdcard.org/developers/tech/sdcard/pls/Simplified_Physical_Layer_Spec.
 The ATmega328 datasheet:
 
 http://www.atmel.com/dyn/resources/prod_documents/doc8161.pdf
- 
 
- */  
+
+ */

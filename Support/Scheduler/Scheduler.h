@@ -3,34 +3,31 @@
 
 #include <stdint.h>
 
-class Scheduler
-{
-  public:
-  struct Subscription 
-  {
+class Scheduler {
+public:
+  struct Subscription {
     Subscription(void (*subscription)(void), uint16_t const timeout);
     void (*subscription)(void);
     uint16_t timeout;
-    Subscription * next;
+    Subscription *next;
   };
 
-  enum {INT_PERIOD = 200U};
+  enum { INT_PERIOD = 200U };
 
-  private:
-  Subscription * subscriptions;
+private:
+  Subscription *subscriptions;
   uint16_t tick;
 
   Scheduler(void);
-  public:
 
-  static Scheduler & get(void);
+public:
+  static Scheduler &get(void);
   static void CheckTime(void);
 
-  void subscribe(Subscription * const subscription);
-  void unsubscribe(Subscription * const subscription);
+  void subscribe(Subscription *const subscription);
+  void unsubscribe(Subscription *const subscription);
 
-  private:
+private:
   void callSubscriptions(void);
-
 };
 #endif /*SCHEDULER_H*/

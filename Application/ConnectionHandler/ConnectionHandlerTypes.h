@@ -1,15 +1,11 @@
 #ifndef CONNECTION_HANDLER_TYPES_H
 #define CONNECTION_HANDLER_TYPES_H
 
-enum Signal {
-    RESET_SIGNAL,
-    CGREG_SIGNAL,
-    SIGNAL_END
-};
+enum Signal { RESET_SIGNAL, CGREG_SIGNAL, SIGNAL_END };
 
 enum State {
 
-    STATE_END
+  STATE_END
 };
 
 #endif // !CONNECTION_HANDLER_TYPES_H

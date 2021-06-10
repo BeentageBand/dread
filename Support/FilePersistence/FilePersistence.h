@@ -2,31 +2,30 @@
 #define FILE_PERSISTENCE_H
 
 #include "Persistence.h"
-#include "SD.h"
 #include "Print.h"
+#include "SD.h"
 
 #define PERSISTENCE_FILENAME_SIZE 13U
 
-class FilePersistence : public Persistence
-{
-  File * file;
+class FilePersistence : public Persistence {
+  File *file;
   char file_name[PERSISTENCE_FILENAME_SIZE];
-  Print * logger;
+  Print *logger;
 
-  public:
-  FilePersistence(File & file, uint8_t const * file_prefix, Print & logger);
+public:
+  FilePersistence(File &file, uint8_t const *file_prefix, Print &logger);
   bool beginTransaction(uint8_t const transaction);
   void commitTransaction(void);
-  void writeRecord(uint32_t const record, uint8_t const * datetime, uint8_t const datetime_size);
+  void writeRecord(uint32_t const record, uint8_t const *datetime,
+                   uint8_t const datetime_size);
   bool deprecateFilename(void);
 
-  char const * getFilename(void);
+  char const *getFilename(void);
   uint32_t getSize(void);
-  Print & getReader(void) { return *file;}
+  Print &getReader(void) { return *file; }
 
-  private:
+private:
   void generateNextUID(void);
 };
-
 
 #endif /*FILE_PERSISTENCE_H*/

@@ -8,8 +8,8 @@
  * published by the Free Software Foundation.
  */
 
-#include "Pinout.h"
 #include "SPI.h"
+#include "Pinout.h"
 
 SPIClass SPI;
 
@@ -33,34 +33,27 @@ void SPIClass::begin() {
   // MISO pin automatically overrides to INPUT.
   // By doing this AFTER enabling SPI, we avoid accidentally
   // clocking in a single bit since the lines go directly
-  // from "input" to SPI control.  
+  // from "input" to SPI control.
   // http://code.google.com/p/arduino/issues/detail?id=888
   pinMode(SCK, OUTPUT);
   pinMode(MOSI, OUTPUT);
 }
 
+void SPIClass::end() { SPCR &= ~_BV(SPE); }
 
-void SPIClass::end() {
-  SPCR &= ~_BV(SPE);
-}
-
-void SPIClass::setBitOrder(uint8_t bitOrder)
-{
-  if(bitOrder == LSBFIRST) {
+void SPIClass::setBitOrder(uint8_t bitOrder) {
+  if (bitOrder == LSBFIRST) {
     SPCR |= _BV(DORD);
   } else {
     SPCR &= ~(_BV(DORD));
   }
 }
 
-void SPIClass::setDataMode(uint8_t mode)
-{
+void SPIClass::setDataMode(uint8_t mode) {
   SPCR = (SPCR & ~SPI_MODE_MASK) | mode;
 }
 
-void SPIClass::setClockDivider(uint8_t rate)
-{
+void SPIClass::setClockDivider(uint8_t rate) {
   SPCR = (SPCR & ~SPI_CLOCK_MASK) | (rate & SPI_CLOCK_MASK);
   SPSR = (SPSR & ~SPI_2XCLOCK_MASK) | ((rate >> 2) & SPI_2XCLOCK_MASK);
 }
-

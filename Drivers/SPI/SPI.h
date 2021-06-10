@@ -11,9 +11,9 @@
 #ifndef _SPI_H_INCLUDED
 #define _SPI_H_INCLUDED
 
-#include <stdio.h>
 #include "DreadSystem.h"
 #include <avr/pgmspace.h>
+#include <stdio.h>
 
 #define SPI_CLOCK_DIV4 0x00
 #define SPI_CLOCK_DIV16 0x01
@@ -29,9 +29,9 @@
 #define SPI_MODE2 0x08
 #define SPI_MODE3 0x0C
 
-#define SPI_MODE_MASK 0x0C  // CPOL = bit 3, CPHA = bit 2 on SPCR
-#define SPI_CLOCK_MASK 0x03  // SPR1 = bit 1, SPR0 = bit 0 on SPCR
-#define SPI_2XCLOCK_MASK 0x01  // SPI2X = bit 0 on SPSR
+#define SPI_MODE_MASK 0x0C    // CPOL = bit 3, CPHA = bit 2 on SPCR
+#define SPI_CLOCK_MASK 0x03   // SPR1 = bit 1, SPR0 = bit 0 on SPCR
+#define SPI_2XCLOCK_MASK 0x01 // SPI2X = bit 0 on SPSR
 
 class SPIClass {
 public:
@@ -59,12 +59,8 @@ byte SPIClass::transfer(byte _data) {
   return SPDR;
 }
 
-void SPIClass::attachInterrupt() {
-  SPCR |= _BV(SPIE);
-}
+void SPIClass::attachInterrupt() { SPCR |= _BV(SPIE); }
 
-void SPIClass::detachInterrupt() {
-  SPCR &= ~_BV(SPIE);
-}
+void SPIClass::detachInterrupt() { SPCR &= ~_BV(SPIE); }
 
 #endif

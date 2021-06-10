@@ -8,8 +8,12 @@ public:
   std::unique_ptr<Modem> under_test;
   ::testing::NiceMock<PrintMock> port_mock;
   ::testing::NiceMock<PrintMock> logger_mock;
+  std::unique_ptr<Sim900> sim900;
 
-  void SetUp(void) { under_test.reset(new Socket(sim900_mock, logger_mock)); }
+  void SetUp(void) { 
+    sim900.reset(new Sim900(port_mock, logger_mock));
+    under_test.reset(new Modem(*sim900, logger_mock)); 
+  }
 };
 
-TEST(ModemTest, isConnected) { ASSERT_FALSE(under_test->isConnected()); }
+TEST_F(ModemTest, isConnected) { ASSERT_FALSE(under_test->isConnected()); }

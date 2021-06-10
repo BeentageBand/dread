@@ -91,7 +91,9 @@ Support/Util                   \
 Utilities
 
 host_SUBDIRS=     \
+Modules/GPRS      \
 Modules/Net       \
+Support/Modem     \
 Support/Scheduler \
 Utilities         \
 UnitTests

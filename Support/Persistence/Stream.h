@@ -37,6 +37,10 @@ class Stream : public Print
   {
     return (hd > tl) ? mask - hd + tl : tl - hd;
   }
+
+  void flush(void) {
+    hd = tl = 0;
+  }
 };
 
 #endif /*STREAM_H*/

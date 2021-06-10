@@ -17,8 +17,8 @@ static const uint8_t FTP_PUT_Open[] PROGMEM=         "FTPPUT=1\r";
 static const uint8_t FTP_PUT_Length[] PROGMEM=         "FTPPUT=2,\r";
 static const uint8_t FTP_PUT_Close[] PROGMEM=         "FTPPUT=2,0\r";
 
-Modem::Modem(File & file, Sim900 & sim900, Print & logger)
-: file(&file), sim900(&sim900), logger(&logger) {}
+Modem::Modem(Sim900 & sim900, Print & logger)
+: sim900(&sim900), logger(&logger) {}
 
 bool Modem::isConnected(void) { 
   bool cgreg_flag = false;
@@ -31,7 +31,8 @@ bool Modem::closePacketSession(void) {
 }
 
 void Modem::updatePacketName(char const * filename, uint8_t const fsize) {
-    sim900->setAtParameter(FTP_PUT_Filename,OK, (uint8_t *)filename,fsize,GSM_TOUT);   /*Sends the filename command with file_name copied on buffer*/
+    sim900->setAtParameter(FTP_PUT_Filename,OK, (uint8_t *)filename,fsize,GSM_TOUT);   
+    /*Sends the filename command with file_name copied on buffer*/
 }
 
 bool Modem::openPacketSession(void) {
@@ -41,7 +42,9 @@ bool Modem::openPacketSession(void) {
 }
 
 bool Modem::sendPacketSize(uint16_t const size) {
-
+  sim900->setAtCmd(FTP_PUT_Length, OK, GSM_TOUT);
+  uint8_t gsm_pointer = 0;
+  return sim900->matchResponse(plusFTP_PUT_Length, gsm_pointer);
 }
 
 void Modem::sendPacketData(Print & data_print, uint16_t const data_size) {

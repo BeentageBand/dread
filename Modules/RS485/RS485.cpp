@@ -51,3 +51,6 @@ int RS485::available(void)
 {
   return port->available();
 }
+
+void RS485::flush(void) {
+}

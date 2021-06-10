@@ -13,8 +13,7 @@
 //#include <Arduino.h>
 #include "DreadSystem.h"
 #include "DreadConfig.h"
-#include "SoftwareSerial.h"
-#include "HardwareSerial.h"
+#include "Print.h"
 //*****************************DEFINITIONS***************************//
 #define AT_READ  '?'
 #define AT_WRITE '='
@@ -23,7 +22,7 @@
 
 class Sim900{
 	public:
-	Sim900(HardwareSerial & hard_port,SoftwareSerial & soft_port);
+	Sim900(Print & hard_port, Print& soft_port);
 	void begin(const uint16_t baud_rate,const uint8_t rst_pin,const uint8_t nopowerdown_pin);
 	void ATCmd(const uint8_t*atcmd);
 	void ATCmdC(const uint8_t*atcmd);
@@ -41,7 +40,7 @@ class Sim900{
 	inline Print & getPrint(void) {return *_hard_port; }
 	private:
 	void printP(const uint8_t*atcmd);
-	SoftwareSerial *_soft_port;
-	HardwareSerial *_hard_port;
+	Print *_soft_port;
+	Print *_hard_port;
 	};
 #endif /* SIM900_H_ */

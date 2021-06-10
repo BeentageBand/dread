@@ -16,12 +16,11 @@
 class Modem {
 
     bool creg_flag;
-    File * file;
     Sim900 * sim900;
     Print * logger;
 
     public:
-    Modem(File & file, Sim900 & sim900, Print & logger);
+    Modem(Sim900 & sim900, Print & logger);
 
     bool isConnected(void);
 

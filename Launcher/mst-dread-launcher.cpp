@@ -43,7 +43,7 @@ static uint8_t upload_prefix[4] = "I1Z";
 static FilePersistence persistence(file, upload_prefix, SoftSerial);
 //GSM
 static Sim900 gprs(Serial,SoftSerial);
-static Modem modem(file, gprs, SoftSerial);
+static Modem modem(gprs, SoftSerial);
 //RFID
 //~~~~
 //RS485

@@ -39,7 +39,7 @@ static uint8_t upload_prefix[4] = "I1Z";
 static FilePersistence persistence(file, upload_prefix, SoftSerial);
 //GSM
 static Sim900 gprs(Serial,SoftSerial);
-static Modem modem(file, gprs, SoftSerial);
+static Modem modem(gprs, SoftSerial);
 //RFID
 static uint8_t Mfr_Key[]={0x00,0x00,0x0B,0xAC,0xAF,0xEA};  //Nedera Key
 static MifareLite rfid(MFR_SS,MFR_NRST);

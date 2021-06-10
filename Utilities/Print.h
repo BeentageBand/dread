@@ -46,6 +46,7 @@ class Print
     virtual int read(void) = 0;
     virtual void write(uint8_t) = 0;
     virtual int available(void) = 0;
+    virtual void flush(void) = 0;
 	//#warning you commented size_t write(const char *str)
     inline void write(const char *str) {
       if (str == NULL) return;

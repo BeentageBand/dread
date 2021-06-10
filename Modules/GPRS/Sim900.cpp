@@ -9,7 +9,7 @@
 const uint8_t AT[5] PROGMEM ="AT+\r";
 const uint8_t CONNECT[12] PROGMEM = "Connecting\r";
 
-Sim900::Sim900(HardwareSerial&hard_port,SoftwareSerial&soft_port)
+Sim900::Sim900(Print & hard_port, Print & soft_port)
 {
 	_soft_port=&soft_port;
 	_hard_port=&hard_port;	
@@ -18,8 +18,8 @@ Sim900::Sim900(HardwareSerial&hard_port,SoftwareSerial&soft_port)
 void Sim900::begin(const uint16_t baud_rate,const uint8_t rst_pin,const uint8_t nopowerdown_pin)
 {
 	uint8_t ptr;
-	_hard_port->begin(baud_rate);
-	_soft_port->begin(baud_rate);
+	//_hard_port->begin(baud_rate);
+	//_soft_port->begin(baud_rate);
 	for (ptr=0; pgm_read_byte(CONNECT+ptr)!='\r';++ptr)
 	{
 		_soft_port->write(pgm_read_byte(CONNECT+ptr));

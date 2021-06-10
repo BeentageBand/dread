@@ -227,7 +227,7 @@ uint8_t MifareLite::ToCard(uint8_t command, uint8_t *sendData, uint8_t sendLen,
   ClearBitMask(CommIrqReg, 0x80);          // Clear all the interrupt bits
   SetBitMask(FIFOLevelReg, 0x80);          // FlushBuffer=1, FIFO initilizate
   Write_MFRC522(CommandReg, PCD_IDLE);     // NO action;cancel current command
-                                       // ???
+                                           // ???
 
   // write data into FIFO
   for (i = 0; i < sendLen; i++) {

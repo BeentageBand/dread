@@ -57,7 +57,7 @@ void HID::CheckTime(void) {
   uint16_t tick = 0;
   // Change hour:minutes if the seconds overflows 60 counts.
   if (tick >= 0) ///////////////////CHANGE to 60 further. 20 is for debugging
-                 ///purposes!!!
+                 /// purposes!!!
   {
     // Use if methods, may use less memory than math.
     // Every 60 seconds, add a minute and seconds resets.

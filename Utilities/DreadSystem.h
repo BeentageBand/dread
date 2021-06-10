@@ -70,7 +70,6 @@ void yield(void);
 #define EXTERNAL 0
 #endif
 
-
 #define interrupts() sei()
 #define noInterrupts() cli()
 

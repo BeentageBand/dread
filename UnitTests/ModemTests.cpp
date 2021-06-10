@@ -10,9 +10,9 @@ public:
   ::testing::NiceMock<PrintMock> logger_mock;
   std::unique_ptr<Sim900> sim900;
 
-  void SetUp(void) { 
+  void SetUp(void) {
     sim900.reset(new Sim900(port_mock, logger_mock));
-    under_test.reset(new Modem(*sim900, logger_mock)); 
+    under_test.reset(new Modem(*sim900, logger_mock));
   }
 };
 

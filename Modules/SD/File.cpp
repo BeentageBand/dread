@@ -49,7 +49,9 @@ char *File::name(void) { return _name; }
 // a directory is a special type of file
 boolean File::isDirectory(void) { return (_file && _file->isDir()); }
 
-void File::write(uint8_t val) { /*return*/ write(&val, 1); }
+void File::write(uint8_t val) { /*return*/
+  write(&val, 1);
+}
 
 void File::write(const uint8_t *buf, size_t size) {
   // size_t t;

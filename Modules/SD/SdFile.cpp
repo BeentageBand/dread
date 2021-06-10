@@ -639,7 +639,7 @@ uint8_t SdFile::openRoot(SdVolume *vol) {
  * \param[in] width Blank fill name if length is less than \a width.
  */
 //#warning you commented void SdFile::printDirName(const dir_t& dir, uint8_t
-//width)
+// width)
 /*{
   uint8_t w = 0;
   for (uint8_t i = 0; i < 11; i++) {
@@ -683,7 +683,7 @@ uint8_t SdFile::openRoot(SdVolume *vol) {
  * \param[in] fatTime The time field from a directory entry.
  */
 //#warning you commented print functions void SdFile::printFatTime(uint16_t
-//fatTime)
+// fatTime)
 /* {
   printTwoDigits(FAT_HOUR(fatTime));
   Serial.print(':');
@@ -1331,14 +1331,18 @@ writeErrorReturn:
  *
  * Use SdFile::writeError to check for errors.
  */
-void SdFile::write(uint8_t b) { /*return*/ write(&b, 1); }
+void SdFile::write(uint8_t b) { /*return*/
+  write(&b, 1);
+}
 //------------------------------------------------------------------------------
 /**
  * Write a string to a file. Used by the Arduino Print class.
  *
  * Use SdFile::writeError to check for errors.
  */
-void SdFile::write(const char *str) { /*return*/ write(str, strlen(str)); }
+void SdFile::write(const char *str) { /*return*/
+  write(str, strlen(str));
+}
 #ifdef __AVR__
 //------------------------------------------------------------------------------
 /**

@@ -3,14 +3,13 @@
 
 #include "DreadSystem.h"
 
-enum LedState
-{
-  LO_ALL  = 0x00,
-  HI_RED  = 0x01,
-  HI_BLU  = 0x02,
-  HI_GRN  = 0x02,
-  HI_ORG  = 0x03,
-  HI_VLT  = 0x03,
+enum LedState {
+  LO_ALL = 0x00,
+  HI_RED = 0x01,
+  HI_BLU = 0x02,
+  HI_GRN = 0x02,
+  HI_ORG = 0x03,
+  HI_VLT = 0x03,
   BLK_RED = 0x05,
   VLT_BLU = 0x07,
   ORG_GRN = 0x07,
@@ -24,18 +23,19 @@ enum LedState
   BLK_ORG = 0x0F
 };
 
-class HID
-{
+class HID {
   uint8_t const buzz_pin;
   uint8_t const red_led_pin;
   uint8_t const greenblue_led_pin;
   uint8_t led_register;
 
-  public:
-  HID(uint8_t const buzz_pin, uint8_t const red_led_pin, uint8_t const greenblue_led_pin);
+public:
+  HID(uint8_t const buzz_pin, uint8_t const red_led_pin,
+      uint8_t const greenblue_led_pin);
 
-  static HID & get(uint8_t const buzz_pin, uint8_t const red_led_pin, uint8_t const greenblue_led_pin);
-  static HID & get(void);
+  static HID &get(uint8_t const buzz_pin, uint8_t const red_led_pin,
+                  uint8_t const greenblue_led_pin);
+  static HID &get(void);
   static void CheckTime(void);
 
   void setLed(uint8_t const setup);

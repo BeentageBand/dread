@@ -1,25 +1,20 @@
-#include "gtest/gtest.h"
 #include "Scheduler.h"
+#include "gtest/gtest.h"
 
 class SchedulerTests : public ::testing::Test {
 
-  public:
+public:
   static Scheduler::Subscription sub1;
   static Scheduler::Subscription sub2;
   static int a;
   static int b;
 
-  static void updateA(void) {
-    a++;
-  }
-  static void updateB(void) {
-    b--;
-  }
+  static void updateA(void) { a++; }
+  static void updateB(void) { b--; }
 };
 
-TEST_F(SchedulerTests, subscribe) 
-{
-  Scheduler & scheduler = Scheduler::get();
+TEST_F(SchedulerTests, subscribe) {
+  Scheduler &scheduler = Scheduler::get();
   scheduler.subscribe(&sub1);
 
   ASSERT_TRUE(sub1.next == NULL);
@@ -33,9 +28,8 @@ TEST_F(SchedulerTests, subscribe)
   ASSERT_EQ(-1, b);
 }
 
-TEST_F(SchedulerTests, unsubscribe) 
-{
-  Scheduler & scheduler = Scheduler::get();
+TEST_F(SchedulerTests, unsubscribe) {
+  Scheduler &scheduler = Scheduler::get();
   scheduler.unsubscribe(&sub1);
   scheduler.unsubscribe(&sub2);
 

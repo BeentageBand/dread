@@ -25,15 +25,15 @@
 #ifndef WiringPrivate_h
 #define WiringPrivate_h
 
-#include <avr/io.h>
 #include <avr/interrupt.h>
-#include <stdio.h>
+#include <avr/io.h>
 #include <stdarg.h>
+#include <stdio.h>
 
 #include "DreadSystem.h"
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #ifndef cbi
@@ -54,7 +54,9 @@ extern "C"{
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define EXTERNAL_NUM_INTERRUPTS 8
-#elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644PA__)
+#elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) ||           \
+    defined(__AVR_ATmega644__) || defined(__AVR_ATmega644A__) ||               \
+    defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644PA__)
 #define EXTERNAL_NUM_INTERRUPTS 3
 #elif defined(__AVR_ATmega32U4__)
 #define EXTERNAL_NUM_INTERRUPTS 5

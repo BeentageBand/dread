@@ -6,7 +6,6 @@
 #define NO_ADDRESS (-1)
 #define BROADCAST_ADDRESS (0)
 
-
 #define REQUEST_HEADER '@'
 #define RESPONSE_HEADER '$'
 #define MSG_FOOTER '!'
@@ -20,11 +19,7 @@ enum StatusCodes {
   ROUTER_NOT_REGISTERED,
 };
 
-enum RequestTypes {
-  REQUEST_ACK = 0,
-  REQUEST_PUT_ADDRESS,
-  REQUEST_GET_RECORD
-};
+enum RequestTypes { REQUEST_ACK = 0, REQUEST_PUT_ADDRESS, REQUEST_GET_RECORD };
 
 enum ResponseTypes {
   RESPONSE_ACK = 0,
